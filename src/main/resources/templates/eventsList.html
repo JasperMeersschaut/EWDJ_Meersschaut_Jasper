@@ -1,0 +1,22 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Events</title>
+</head>
+<body>
+<h1>Events</h1>
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Speakers</th>
+    <th>Room</th>
+    <th>Date & Time</th>
+  </tr>
+  <tr th:each="event : ${events}">
+    <td th:text="${event.name}"></td>
+    <td th:text="${event.speakers}"></td>
+    <td th:text="${event.room.name}"></td>
+    <td th:text="${#dates.format(event.eventDateTime, 'yyyy-MM-dd HH:mm')}"></td>
+  </tr>
+</table>
+</body>
+</html>

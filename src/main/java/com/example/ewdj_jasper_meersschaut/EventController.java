@@ -1,0 +1,37 @@
+package com.example.ewdj_jasper_meersschaut;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import repository.EventRepository;
+
+@Controller
+@RequestMapping("/events")
+public class EventController {
+    @Autowired
+    private EventRepository repository;
+
+    @GetMapping
+    public String listEvents(Model model) {
+        model.addAttribute("eventsList", repository.findAll());
+        return "eventsList";
+    }
+
+//    @GetMapping("/{id}")
+//    public String viewEvent(@PathVariable Long id, Model model) {
+//        Event event = eventService.getEventById(id);
+//        model.addAttribute("event", event);
+//        return "events/view";
+//    }
+//
+//    @PostMapping
+//    public String addEvent(@ModelAttribute @Valid Event event, BindingResult result) {
+//        if (result.hasErrors()) {
+//            return "events/form";
+//        }
+//        eventService.saveEvent(event);
+//        return "redirect:/events";
+//    }
+}
