@@ -1,22 +1,18 @@
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Events</title>
+    <title>Events List</title>
+    <link rel="stylesheet" type="text/css" href="/css/eventsList.css">
 </head>
 <body>
 <h1>Events</h1>
-<table>
-  <tr>
-    <th>Name</th>
-    <th>Speakers</th>
-    <th>Room</th>
-    <th>Date & Time</th>
-  </tr>
-  <tr th:each="event : ${events}">
-    <td th:text="${event.name}"></td>
-    <td th:text="${event.speakers}"></td>
-    <td th:text="${event.room.name}"></td>
-    <td th:text="${#dates.format(event.eventDateTime, 'yyyy-MM-dd HH:mm')}"></td>
-  </tr>
-</table>
+<div class="events-container">
+    <div class="event-card" th:each="event : ${eventsList}">
+        <h2 th:text="${event.name}">Event Name</h2>
+        <p><strong>Speakers:</strong> <span th:text="${event.speakers}">Speaker Names</span></p>
+        <p><strong>Room:</strong> <span class="room" th:text="${event.room.name}">Room Name</span></p>
+        <p><strong>Date & Time:</strong> <span class="date-time" th:text="${event.eventDateTime}">Event Date</span></p>
+    </div>
+</div>
 </body>
 </html>
