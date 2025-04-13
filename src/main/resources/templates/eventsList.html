@@ -8,10 +8,15 @@
 <h1>Events</h1>
 <div class="events-container">
     <div class="event-card" th:each="event : ${eventsList}">
-        <h2 th:text="${event.name}">Event Name</h2>
+        <h2>
+            <a th:href="@{/events/{id}(id=${event.id})}" th:text="${event.name}">Event Name</a>
+        </h2>
         <p><strong>Speakers:</strong> <span th:text="${event.speakers}">Speaker Names</span></p>
         <p><strong>Room:</strong> <span class="room" th:text="${event.room.name}">Room Name</span></p>
-        <p><strong>Date & Time:</strong> <span class="date-time" th:text="${event.eventDateTime}">Event Date</span></p>
+        <p><strong>Date & Time:</strong> <span
+                th:text="${#temporals.format(event.eventDateTime, 'yyyy-MM-dd - HH:mm')}">Event Date</span>
+        <p><strong>Capacity:</strong> <span th:text="${event.room.capacity}">Room Capacity</span></p>
+        </p>
     </div>
 </div>
 </body>

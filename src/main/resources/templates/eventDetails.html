@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Event Details</title>
+    <link rel="stylesheet" type="text/css" href="/css/eventDetails.css">
+</head>
+<body>
+<div class="container">
+    <h1 th:text="${event.name}">Event Name</h1>
+    <p><strong>Description:</strong> <span th:text="${event.description}">Event Description</span></p>
+    <p><strong>Speakers:</strong> <span th:text="${event.speakers}">Speaker Names</span></p>
+    <p><strong>Room:</strong> <span th:text="${event.room.name}">Room Name</span></p>
+    <p><strong>Date & Time:</strong>
+        <span th:text="${#temporals.format(event.eventDateTime, 'yyyy-MM-dd - HH:mm')}">Event Date</span>
+    <p><strong>Capacity:</strong> <span th:text="${event.room.capacity}">Room Capacity</span></p>
+    <a th:href="@{/events}">Back to Events</a>
+</div>
+</body>
+</html>
