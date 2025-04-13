@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(exclude = "id")
@@ -20,6 +21,7 @@ public class Event implements Serializable {
 
     @NotBlank(message = "{event.name.required}")
     @Pattern(regexp = "^[A-Za-z].*", message = "{event.name.invalid}")
+    @Getter
     private String name;
 
     private String description;
@@ -33,6 +35,7 @@ public class Event implements Serializable {
     private Room room;
 
     @NotNull(message = "{event.date.required}")
+    @Getter
     private LocalDateTime eventDateTime;
 
     @Min(value = 1000, message = "{event.projectorCode.invalid}")
@@ -45,7 +48,7 @@ public class Event implements Serializable {
     @DecimalMax(value = "100.00", message = "{event.price.invalid}")
     private int price;
 
-    public Event(String name, String description, List<String>  speakers, Room room, LocalDateTime eventDateTime, int projectorCode, int projectorCheck, int price) {
+    public Event(String name, String description, List<String> speakers, Room room, LocalDateTime eventDateTime, int projectorCode, int projectorCheck, int price) {
         this.name = name;
         this.description = description;
         this.speakers = speakers;

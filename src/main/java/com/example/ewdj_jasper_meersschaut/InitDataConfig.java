@@ -21,19 +21,54 @@ public class InitDataConfig implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        // Save the Room first
-        Room room = new Room("A101", 100);
-        roomRepository.save(room); // Ensure the Room is saved in the database
+        Room room1 = new Room("A101", 100);
+        Room room2 = new Room("B202", 50);
+        Room room3 = new Room("C303", 200);
+        Room room4 = new Room("D404", 150);
 
-        // Save the Event with the persisted Room
-        eventRepository.save(new Event(
-                "Tech Conference",
-                "A conference about the latest in tech",
-                List.of("John Doe", "Jane Smith", "Alice Johnson"),
-                room, // Use the persisted Room
-                LocalDateTime.of(2025, 5, 20, 10, 0),
-                1234,
-                56,
-                49
+        roomRepository.saveAll(List.of(room1, room2, room3, room4));
+
+        eventRepository.saveAll(List.of(
+                new Event(
+                        "AI Workshop",
+                        "A hands-on workshop on AI and machine learning",
+                        List.of("Alice Brown", "Bob White"),
+                        room1,
+                        LocalDateTime.of(2025, 6, 15, 9, 0),
+                        2345,
+                        78,
+                        59
+                ),
+                new Event(
+                        "Cybersecurity Summit",
+                        "Exploring the latest trends in cybersecurity",
+                        List.of("Charlie Green", "Diana Black"),
+                        room2,
+                        LocalDateTime.of(2025, 7, 10, 14, 0),
+                        3456,
+                        89,
+                        79
+                ),
+                new Event(
+                        "Cloud Computing Conference",
+                        "Learn about advancements in cloud technologies",
+                        List.of("Eve Blue", "Frank Yellow"),
+                        room3,
+                        LocalDateTime.of(2025, 8, 20, 11, 0),
+                        4567,
+                        90,
+                        99
+                ),
+                new Event(
+                        "Web Development Bootcamp",
+                        "Master modern web development techniques",
+                        List.of("Grace Red", "Hank Purple"),
+                        room4,
+                        LocalDateTime.of(2025, 9, 5, 16, 0),
+                        5678,
+                        67,
+                        49
+                )
         ));
-    }}
+    }
+}
