@@ -15,35 +15,47 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig{
+public class SecurityConfig {
 
     @Autowired
     DataSource dataSource;
+
+//    user:
+//    username: nameUser
+//    password: 12345678
+//    admin:
+//    username: admin
+//    password: admin
+
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.jdbcAuthentication().dataSource(dataSource).passwordEncoder(new BCryptPasswordEncoder());
     }
-    
+
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    	http.csrf(csrf -> csrf.csrfTokenRepository(new HttpSessionCsrfTokenRepository()))
+        http.csrf(csrf -> csrf.csrfTokenRepository(new HttpSessionCsrfTokenRepository()))
                 .authorizeHttpRequests(requests ->
-                        requests.requestMatchers("/login**").permitAll()
-                                .requestMatchers("/css/**").permitAll()
-                                .requestMatchers("/403**").permitAll()
-                                .requestMatchers("/*")
-                                .access(new WebExpressionAuthorizationManager("hasRole('ROLE_USER')")))
+                                requests.requestMatchers("/login**").permitAll()
+                                        .requestMatchers("/css/**").permitAll()
+                                        .requestMatchers("/403**").permitAll()
+                                        .requestMatchers("/events/create").hasRole("ADMIN")
+                                        .requestMatchers("events/favourites").hasRole("USER")
+                                        .requestMatchers("/events/*").permitAll()
+                                        .requestMatchers("/*")
+                                        .access(new WebExpressionAuthorizationManager("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')"))
+                )
                 .formLogin(form ->
-                        form.defaultSuccessUrl("/welcome", true)
+                        form.defaultSuccessUrl("/events", true)
                                 .loginPage("/login")
                                 .usernameParameter("username").passwordParameter("password")
-                                )
+                )
                 .exceptionHandling(handling -> handling.accessDeniedPage("/403"));
-        
+
         return http.build();
     }
-    
+
 }
 
 
