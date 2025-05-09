@@ -18,9 +18,11 @@ public class EwdjJasperMeersschautApplication implements WebMvcConfigurer {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("index");
+        registry.addViewController("/").setViewName("forward:/events");
         registry.addViewController("/events").setViewName("eventsList");
+        registry.addViewController("/event/create").setViewName("events/form");
         registry.addViewController("/events/{id}").setViewName("eventDetails");
+        registry.addViewController("/403").setViewName("403");
     }
 
 }
