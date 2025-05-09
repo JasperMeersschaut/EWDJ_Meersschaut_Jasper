@@ -57,4 +57,9 @@ public class Event implements Serializable {
         this.projectorCheck = projectorCheck;
         this.price = price;
     }
-}
+
+    public static class EventFactory {
+        public static Event createEvent() {
+            return new Event();
+        }
+    } }

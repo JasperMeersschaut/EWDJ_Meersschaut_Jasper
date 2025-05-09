@@ -1,11 +1,10 @@
 package com.example.ewdj_jasper_meersschaut;
 
+import domain.Event;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import repository.EventRepository;
 
 @Controller
@@ -24,6 +23,12 @@ public class EventController {
     public String viewEvent(@PathVariable Long id, Model model) {
         model.addAttribute("event", repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid event ID: " + id)));
         return "eventDetails";
+    }
+
+    @PostMapping
+    public String createEvent(Event event, Model model) {
+        model.addAttribute("eventSave",  repository.save(event));
+        return "redirect:/events";
     }
 
 

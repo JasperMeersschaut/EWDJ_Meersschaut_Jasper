@@ -6,6 +6,7 @@
 </head>
 <body>
 <h1>Events</h1>
+<a href="/event/create" class="create-event-button">Create Event</a>
 <div class="events-container">
     <div class="event-card" th:each="event : ${eventsList}">
         <h2>
@@ -15,7 +16,7 @@
         <p><strong>Room:</strong> <span class="room" th:text="${event.room.name}">Room Name</span></p>
         <p><strong>Date & Time:</strong> <span
                 th:text="${#temporals.format(event.eventDateTime, 'yyyy-MM-dd - HH:mm')}">Event Date</span>
-        <p><strong>Capacity:</strong> <span th:text="${event.room.capacity}">Room Capacity</span></p>
+<!--        <p><strong>Capacity:</strong> <span th:text="${event.room.capacity}">Room Capacity</span></p>-->
         </p>
     </div>
 </div>
