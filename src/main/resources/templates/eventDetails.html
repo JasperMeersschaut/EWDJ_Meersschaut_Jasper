@@ -11,11 +11,17 @@
     <p><strong>Speakers:</strong> <span th:text="${event.speakers}">Speaker Names</span></p>
     <p><strong>Room:</strong> <span th:text="${event.room.name}">Room Name</span></p>
     <p><strong>Capacity:</strong> <span th:text="${event.room.capacity}">Room Capacity</span></p>
-    <p><strong>Date & Time: </strong> <span th:text="${#temporals.format(event.eventDateTime, 'yyyy-MM-dd - HH:mm')}">Event Date</span><p>
+    <p><strong>Date & Time: </strong> <span th:text="${#temporals.format(event.eventDateTime, 'yyyy-MM-dd - HH:mm')}">Event Date</span>
+    <p>
 
-        <a >Favourite</a>
-        <a>Edit</a>
-    <a th:href="@{/events}">Back to Events</a>
+        <th:block th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+            <a href="/event/{id}/edit" class="favourites-button">Edit</a>
+        </th:block>
+        <th:block th:unless="${#authorization.expression('hasRole(''ADMIN'')')}">
+            <a>Favourite</a>
+        </th:block>
+
+        <a th:href="@{/events}">Back to Events</a>
 </div>
 </body>
 </html>
