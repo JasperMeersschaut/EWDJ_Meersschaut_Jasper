@@ -2,11 +2,14 @@ package com.example.ewdj_jasper_meersschaut;
 
 import domain.Event;
 import domain.Room;
+import domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import repository.EventRepository;
 import repository.RoomRepository;
+import repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,6 +21,8 @@ public class InitDataConfig implements CommandLineRunner {
     private EventRepository eventRepository;
     @Autowired
     private RoomRepository roomRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public void run(String... args) {
@@ -70,5 +75,22 @@ public class InitDataConfig implements CommandLineRunner {
                         49
                 )
         ));
+
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+        User admin = new User();
+        admin.setFirstName("admin");
+        admin.setEmail("admin@example.com");
+        admin.setWachtwoord(passwordEncoder.encode("$2y$10$xT2EKeAP.Ey84iy5dOwuOe5hxtRhvGVk6aLIpgAIpAzzu8xfJWPpO"));
+        admin.setAdmin(true);
+
+        User nameUser = new User();
+        nameUser.setFirstName("nameUser");
+        nameUser.setEmail("nameuser@example.com");
+        nameUser.setWachtwoord(passwordEncoder.encode("$2y$10$E.442wS/c9QXLpkLcXaOY.Bet9jTm/aoOUi65yvtuvmJuBJJu1KcG"));
+        nameUser.setAdmin(true);
+
+
+        userRepository.saveAll(List.of(admin, nameUser));
     }
 }
