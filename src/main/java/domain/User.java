@@ -9,13 +9,12 @@ import lombok.*;
 import java.util.HashSet;
 import java.util.Set;
 
-
 @Entity
 @Table(name = "users")
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(exclude = "id")
-@ToString(exclude = {"id", "favourites"})
+@ToString(exclude = {"id", "favourites", "roles"})
 public class User {
 
     @Id
@@ -23,39 +22,36 @@ public class User {
     @Setter(AccessLevel.NONE)
     private Long id;
 
-    @NotBlank(message = "{user.firstname.required}")
-    @Column(unique = true)
-    private String firstName;
+    @NotBlank(message = "{user.username.required}")
+    @Column(unique = true, nullable = false)
+    private String username;
 
     @NotBlank(message = "{user.email.required}")
     @Email(message = "{user.email.invalid}")
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
     @NotBlank(message = "{user.password.required}")
-    private String wachtwoord;
-
-    // Vervanging van de String rol door een boolean admin
     @Column(nullable = false)
-    private boolean isAdmin;
+    private String password;
 
     @ManyToMany
     @JoinTable(
-            name = "gebruiker_favorieten",
-            joinColumns = @JoinColumn(name = "gebruiker_id"),
+            name = "user_favourites",
+            joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "event_id")
     )
     @Size(max = 5, message = "{user.favorites.max}")
     private Set<Event> favourites = new HashSet<>();
 
-//    public boolean addFavorite(Event event) {
-//        if (favorites.size() < 5) {
-//            return favorites.add(event);
-//        }
-//        return false;
-//    }
-//
-//    public boolean removeFavorite(Event event) {
-//        return favorites.remove(event);
-//    }
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(
+            name = "authorities",
+            joinColumns = @JoinColumn(name = "username", referencedColumnName = "username", nullable = false)
+    )
+    @Column(name = "authority", nullable = false)
+    private Set<String> roles = new HashSet<>();
+
+    @Column(nullable = false)
+    private boolean enabled = true;
 }
