@@ -6,12 +6,14 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
 @Setter
+@Getter
 @NoArgsConstructor
 @EqualsAndHashCode(exclude = "id")
 @ToString(exclude = {"id", "favourites", "roles"})

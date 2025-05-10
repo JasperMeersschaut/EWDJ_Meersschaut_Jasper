@@ -37,14 +37,13 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.csrfTokenRepository(new HttpSessionCsrfTokenRepository()))
                 .authorizeHttpRequests(requests ->
-                                requests.requestMatchers("/login**").permitAll()
-                                        .requestMatchers("/css/**").permitAll()
-                                        .requestMatchers("/403**").permitAll()
-                                        .requestMatchers("/events/create").hasRole("ADMIN")
-                                        .requestMatchers("events/favourites").hasRole("USER")
-                                        .requestMatchers("/events/*").permitAll()
-                                        .requestMatchers("/*")
-                                        .access(new WebExpressionAuthorizationManager("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')"))
+                        requests.requestMatchers("/login**").permitAll()
+                                .requestMatchers("/css/**").permitAll()
+                                .requestMatchers("/403**").permitAll()
+                                .requestMatchers("/events/create").hasRole("ADMIN")
+                                .requestMatchers("/events/favourites").hasRole("USER").requestMatchers("/events/*").permitAll()
+                                .requestMatchers("/*")
+                                .access(new WebExpressionAuthorizationManager("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')"))
                 )
                 .formLogin(form ->
                         form.defaultSuccessUrl("/events", true)
