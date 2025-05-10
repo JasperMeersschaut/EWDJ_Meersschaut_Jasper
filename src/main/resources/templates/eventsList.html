@@ -3,16 +3,17 @@
 <head>
     <title>Events List</title>
     <link rel="stylesheet" type="text/css" href="/css/eventsList.css">
+    <link rel="stylesheet" type="text/css" href="/css/headerFooters.css">
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
-<h1>Events</h1>
+<h1 th:text="#{events.title}"></h1>
 
 <th:block th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
     <a href="/events/create" class="create-event-button">Create Event</a>
 </th:block>
 <th:block th:unless="${#authorization.expression('hasRole(''ADMIN'')')}">
-    <a href="/events/favourites" class="favourites-button">Favourites</a>
+    <a href="/events/favourites" class="favourites-button" th:text="#{events.favourites}">Favourites</a>
 </th:block>
 
 <div class="events-container">
@@ -20,9 +21,9 @@
         <h2>
             <a th:href="@{/events/{id}(id=${event.id})}" th:text="${event.name}">Event Name</a>
         </h2>
-        <p><strong>Speakers:</strong> <span th:text="${event.speakers}">Speaker Names</span></p>
-        <p><strong>Room:</strong> <span class="room" th:text="${event.room.name}">Room Name</span></p>
-        <p><strong>Date & Time:</strong> <span
+        <p><strong th:text="#{events.speakers}">Speakers:</strong> <span th:text="${event.speakers}">Speaker Names</span></p>
+        <p><strong th:text="#{events.room}"></strong> <span class="room" th:text="${event.room.name}">Room Name</span></p>
+        <p><strong th:text="#{events.dateTime}">Date & Time:</strong> <span
                 th:text="${#temporals.format(event.eventDateTime, 'yyyy-MM-dd - HH:mm')}">Event Date</span>
             <!--        <p><strong>Capacity:</strong> <span th:text="${event.room.capacity}">Room Capacity</span></p>-->
         </p>
@@ -32,5 +33,6 @@
     <input type="submit" value="Logout" />
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 </form>
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

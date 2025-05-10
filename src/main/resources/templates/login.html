@@ -2,36 +2,45 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="#{login.title}">Login Page</title>
+    <title>Login Page</title>
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
 <body onload='document.loginForm.username.focus();'>
-<h1 th:text="#{login.h2}">Spring Security Custom Login Form (Annotation)</h1>
+<div th:replace="~{fragments/header :: header}"></div>
+<h1>Spring Security Custom Login Form (Annotation)</h1>
 
 <div id="login-box">
-    <h3 th:text="#{login.username}">Login with Username and Password</h3>
+
+    <h3>Login with Username and Password</h3>
+    <h1 th:text="#{title}"></h1>
+    <p th:text="#{text}"></p>
+
 
     <div th:if="${error}" class="error" th:text="${error}"></div>
+
     <div th:if="${msg}" class="msg" th:text="${msg}"></div>
 
     <form th:action="@{/login}" method="post">
         <table>
             <tr>
-                <td th:text="#{login.username}">User:</td>
-                <td><input type="text" name="username" value=""/></td>
+                <td>User:</td>
+                <td><input type='text' name='username' value=''></td>
             </tr>
             <tr>
-                <td th:text="#{login.password}">Password:</td>
-                <td><input type="password" name="password"/></td>
+                <td>Password:</td>
+                <td><input type='password' name='password'/></td>
             </tr>
             <tr>
-                <td colspan="2">
-                    <button name="submit" type="submit" th:text="#{login.submit}">Login</button>
+                <td colspan='2'>
+                    <button name="submit" type="submit">Login</button>
                 </td>
             </tr>
         </table>
+
         <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+
     </form>
 </div>
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>
