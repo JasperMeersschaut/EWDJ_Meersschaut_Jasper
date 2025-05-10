@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<!-- Fragment for displaying favorites list -->
+<div th:fragment="favorietenLijst" class="favorites-list">
+    <!-- This will be populated with favorite events -->
+    <div class="no-favorites" th:if="${favorieten == null || #lists.isEmpty(favorieten)}">
+        <span th:text="#{account.noFavorites}">Je hebt nog geen favoriete events.</span>
+    </div>
+    <div class="favorite-event" th:if="${favorieten != null}" th:each="event : ${favorieten}"
+         th:onclick="|location.href='/event/${event.id}'|"
+         style="cursor: pointer;">
+        <h3 th:text="${event.name}"></h3>
+        <p th:text="${event.description}"></p>
+        <p>
+            <span th:text="${#temporals.format(event.eventDateTime, 'dd-MM-yyyy HH:mm')}"></span>
+            <span th:text="${event.lokaal.name}"></span>
+        </p>
+        <p class="event-price" th:text="${'€' + event.price}"></p>
+    </div>
+</div>
+</body>
+</html>
