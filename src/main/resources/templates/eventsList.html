@@ -5,6 +5,7 @@
     <link rel="stylesheet" type="text/css" href="/css/eventsList.css">
 </head>
 <body>
+<div th:replace="~{fragments/header :: header}"></div>
 <h1>Events</h1>
 
 <th:block th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
