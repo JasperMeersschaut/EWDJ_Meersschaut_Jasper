@@ -1,17 +1,32 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-	<link rel="stylesheet" type="text/css" href="/css/headerFooters.css">
+    <link rel="stylesheet" type="text/css" href="/css/headerFooters.css">
 </head>
 <header>
-	<fieldset>
-		<legend>HEADER</legend>
-		<nav>
-			<ul>
-				<li><a th:href="@{/?lang=nl}">Nederlands</a></li>
-				<li><a th:href="@{/?lang=en}">English</a></li>
-			</ul>
-		</nav>
-	</fieldset>
+    <fieldset>
+        <legend>HEADER</legend>
+        <nav>
+            <ul>
+                <li><a th:href="@{/?lang=nl}">Nederlands</a></li>
+                <li><a th:href="@{/?lang=en}">English</a></li>
+                <li th:if="${#authentication.authenticated}">
+    <span th:switch="${#authentication.authorities[0].authority}">
+        <span th:text="#{role}">Role </span>:
+        <span th:case="'ROLE_USER'" th:text="#{role.user}"></span>
+        <span th:case="'ROLE_ADMIN'" th:text="#{role.admin}"></span>
+        <span th:case="*"
+              th:text="#{role.unknown}"></span>
+    </span>
+                </li>
+                <li th:if="${#authentication.authenticated}">
+                    <form th:action="@{/logout}" method="post" style="display: inline;">
+                        <button type="submit">Logout</button>
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    </form>
+                </li>
+            </ul>
+        </nav>
+    </fieldset>
 </header>
 </html>
