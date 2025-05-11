@@ -5,3 +5,58 @@ nav {
     justify-content: space-between;
     align-items: center;
 }
+header nav {
+    background-color: #dfdedc;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+    justify-items: center;
+}
+
+.header-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+.header-options {
+    list-style: none;
+    display: flex;
+    gap: 15px;
+    margin: 0;
+    padding: 0;
+}
+
+.header-options li {
+    display: flex;
+    align-items: center;
+}
+
+.header-options a {
+    text-decoration: none;
+    color: #007BFF;
+    font-size: 14px;
+    transition: color 0.3s ease;
+}
+
+.header-options a:hover {
+    color: #0056b3;
+}
+
+.logout-button {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    font-size: 14px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.logout-button:hover {
+    background-color: #d32f2f;
+    transform: scale(1.05);
+}
