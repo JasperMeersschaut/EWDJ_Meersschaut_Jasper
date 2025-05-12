@@ -16,7 +16,7 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import java.util.Locale;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.example.ewdj_jasper_meersschaut", "service", "repository", "domain"})
 @EnableJpaRepositories("repository")
 @EntityScan("domain")
 public class EwdjJasperMeersschautApplication implements WebMvcConfigurer {

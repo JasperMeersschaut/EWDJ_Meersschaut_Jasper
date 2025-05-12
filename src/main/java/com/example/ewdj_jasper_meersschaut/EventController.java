@@ -1,14 +1,12 @@
 package com.example.ewdj_jasper_meersschaut;
 
 import domain.Event;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import repository.EventRepository;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import service.EventService;
 
 import java.util.List;
@@ -17,14 +15,15 @@ import java.util.List;
 @RequestMapping("/events")
 public class EventController {
 
-    private final EventService eventService = new EventService();
+    private final EventService eventService;
 
-    @Autowired
-    private EventRepository repository;
+    public EventController(EventService eventService) {
+        this.eventService = eventService;
+    }
 
     @GetMapping
     public String listEvents(Model model) {
-        model.addAttribute("eventsList", repository.findAll());
+        model.addAttribute("eventsList", eventService.getAllEvents());
         return "eventsList";
     }
 
@@ -38,20 +37,18 @@ public class EventController {
 
     @GetMapping("/{id}")
     public String viewEvent(@PathVariable Long id, Model model) {
-        Event event = repository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid event ID: " + id));
+        Event event = eventService.findById(id);
         model.addAttribute("event", event);
         return "eventDetails";
     }
 
 
-//
-//    @PostMapping
-//    public String addEvent(@ModelAttribute @Valid Event event, BindingResult result) {
-//        if (result.hasErrors()) {
-//            return "events/form";
-//        }
-//        eventService.saveEvent(event);
-//        return "redirect:/events";
-//    }
+    @PostMapping
+    public String addEvent(@ModelAttribute @Valid Event event, BindingResult result) {
+        if (result.hasErrors()) {
+            return "events/form";
+        }
+        eventService.saveEvent(event);
+        return "redirect:/events";
+    }
 }

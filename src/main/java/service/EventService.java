@@ -2,6 +2,7 @@ package service;
 
 import domain.Event;
 import domain.User;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import repository.EventRepository;
@@ -18,6 +19,11 @@ public class EventService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    public EventService(EventRepository eventRepository) {
+        this.eventRepository = eventRepository;
+    }
+
     public List<Event> getUserFavorites(String username) {
         User user = userRepository.findUserByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
@@ -27,5 +33,18 @@ public class EventService {
                     return dateComparison != 0 ? dateComparison : e1.getName().compareToIgnoreCase(e2.getName());
                 })
                 .toList();
+    }
+
+    public Object getAllEvents() {
+        return eventRepository.findAll();
+    }
+
+    public void saveEvent(@Valid Event event) {
+        eventRepository.save(event);
+    }
+
+    public Event findById(Long id) {
+        return eventRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Event not found"));
     }
 }
