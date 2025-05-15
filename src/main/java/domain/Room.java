@@ -36,4 +36,11 @@ public class Room {
         this.name = name;
         this.capacity = capacity;
     }
+
+
+    public static class RoomFactory {
+        public static Room createRoom() {
+            return new Room();
+        }
+    }
 }
