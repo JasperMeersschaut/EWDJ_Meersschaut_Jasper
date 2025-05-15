@@ -9,31 +9,37 @@
 <form th:action="@{/events}" th:object="${event}" method="post">
     <div>
         <label for="name">Name:</label>
-        <input type="text" id="name" name="name" th:field="*{name}" required />
+        <input type="text" id="name" name="name" th:field="*{name}" required/>
     </div>
     <div>
         <label for="description">Description:</label>
-        <textarea id="description" name="description" th:field="*{description}" required></textarea>
+        <textarea id="description" name="description" th:field="*{description}"></textarea>
+    </div>
+    <div>
+        <label for="speakers">Speakers (comma-separated):</label>
+        <input type="text" id="speakers" name="speakers" th:field="*{speakers}" required/>
     </div>
     <div>
         <label for="eventDateTime">Date & Time:</label>
-        <input type="datetime-local" id="eventDateTime" name="eventDateTime" th:field="*{eventDateTime}" required />
+        <input type="datetime-local" id="eventDateTime" name="eventDateTime" th:field="*{eventDateTime}" required/>
     </div>
     <div>
-        <label for="price">Price:</label>
-        <input type="number" id="price" name="price" th:field="*{price}" required />
+        <label for="room">Room:</label>
+        <select id="room" name="room.id" th:field="*{room.id}" required>
+            <option th:each="room : ${rooms}" th:value="${room.id}" th:text="${room.name}"></option>
+        </select>
     </div>
     <div>
         <label for="projectorCode">Projector Code:</label>
-        <input type="number" id="projectorCode" name="projectorCode" th:field="*{projectorCode}" />
+        <input type="number" id="projectorCode" name="projectorCode" th:field="*{projectorCode}" required/>
     </div>
     <div>
         <label for="projectorCheck">Projector Check:</label>
-        <input type="checkbox" id="projectorCheck" name="projectorCheck" th:field="*{projectorCheck}" />
+        <input type="number" id="projectorCheck" name="projectorCheck" th:field="*{projectorCheck}" required/>
     </div>
     <div>
-        <label for="room">Room ID:</label>
-        <input type="number" id="room" name="room.id" th:field="*{room.id}" required />
+        <label for="price">Price:</label>
+        <input type="number" id="price" name="price" th:field="*{price}" step="0.01" required/>
     </div>
     <div>
         <button type="submit">Create Event</button>

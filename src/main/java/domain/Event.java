@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
+@Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(exclude = "id")
@@ -16,6 +17,7 @@ import java.util.List;
 public class Event implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Setter(AccessLevel.NONE)
     private Long id;
 
     @NotBlank(message = "{event.name.required}")
@@ -62,4 +64,5 @@ public class Event implements Serializable {
         public static Event createEvent() {
             return new Event();
         }
-    } }
+    }
+}

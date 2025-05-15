@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import service.EventService;
+import service.RoomService;
 
 import java.util.List;
 
@@ -17,8 +18,11 @@ public class EventController {
 
     private final EventService eventService;
 
-    public EventController(EventService eventService) {
+    private final RoomService roomService;
+
+    public EventController(EventService eventService, RoomService roomService) {
         this.eventService = eventService;
+        this.roomService = roomService;
     }
 
     @GetMapping
@@ -42,6 +46,19 @@ public class EventController {
         return "eventDetails";
     }
 
+    @GetMapping("/create")
+    public String showCreateEventForm(Model model) {
+        model.addAttribute("event", Event.EventFactory.createEvent());
+        model.addAttribute("rooms", roomService.getAllRooms());
+        return "events/form";
+    }
+
+    @PostMapping("/create")
+    public String addEvent(@ModelAttribute Event event, Model model) {
+        eventService.saveEvent(event);
+
+        return "redirect:/events";
+    }
 
     @PostMapping
     public String addEvent(@ModelAttribute @Valid Event event, BindingResult result) {
