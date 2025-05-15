@@ -21,7 +21,7 @@ public class RoomService {
         return roomRepository.findAll();
     }
 
-    public void saveEvent(@Valid Room room) {
+    public void saveRoom(@Valid Room room) {
         roomRepository.save(room);
     }
 
