@@ -53,6 +53,15 @@ public class EventController {
         return "events/form";
     }
 
+    //    @PostMapping("/create")
+//    public String addEvent(@ModelAttribute @Valid Event event, BindingResult result, Model model) {
+//        if (result.hasErrors()) {
+//            model.addAttribute("rooms", roomService.getAllRooms());
+//            return "events/form";
+//        }
+//        eventService.saveEvent(event);
+//        return "redirect:/events";
+//    }
     @PostMapping("/create")
     public String addEvent(@ModelAttribute Event event, Model model) {
         eventService.saveEvent(event);
