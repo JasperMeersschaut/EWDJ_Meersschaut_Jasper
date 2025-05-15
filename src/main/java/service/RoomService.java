@@ -1,9 +1,9 @@
 package service;
 
 import domain.Room;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 import repository.RoomRepository;
 
 import java.util.List;
@@ -17,9 +17,12 @@ public class RoomService {
     public RoomService(RoomRepository roomRepository) {
         this.roomRepository = roomRepository;
     }
-
-    @GetMapping
     public List<Room> getAllRooms() {
         return roomRepository.findAll();
     }
+
+    public void saveEvent(@Valid Room room) {
+        roomRepository.save(room);
+    }
+
 }
