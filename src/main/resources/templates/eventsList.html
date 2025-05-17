@@ -13,7 +13,7 @@
     <a href="/events/create" class="create-event-button">Create Event</a>
 </th:block>
 <th:block th:unless="${#authorization.expression('hasRole(''ADMIN'')')}">
-    <a href="/events/favourites" class="favourites-button" th:text="#{events.favourites}">Favourites</a>
+    <a href="/favourites" class="favourites-button" th:text="#{events.favourites}">Favourites</a>
 </th:block>
 
 <div class="events-container">

@@ -6,7 +6,9 @@
 <header>
     <nav>
         <div class="header-title">
-            <span th:text="#{header.title}">IT Conference</span>
+            <a th:href="@{/}" style="text-decoration: none; color: inherit;">
+                <span th:text="#{header.title}">IT Conference</span>
+            </a>
         </div>
         <ul class="header-options">
             <li><a th:href="@{/?lang=nl}">Nederlands</a></li>
