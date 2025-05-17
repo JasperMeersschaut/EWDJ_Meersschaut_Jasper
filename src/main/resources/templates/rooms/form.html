@@ -2,23 +2,29 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Create Room</title>
-    <link rel="stylesheet" type="text/css" href="/css/form.css">
+    <link rel="stylesheet" type="text/css" href="/css/rooms/form.css">
 </head>
 <body>
-<h1>Create Room</h1>
+<h1 th:text="#{room.create.title}">Create Room</h1>
+
 <form th:action="@{/rooms}" th:object="${room}" method="post">
     <div>
-        <label for="name">Room Name:</label>
-        <input type="text" id="name" name="name" th:field="*{name}" required/>
+        <label for="name" th:text="#{room.name.label}">Room Name:</label>
+        <input type="text" id="name" th:field="*{name}" required/>
+        <div th:if="${#fields.hasErrors('name')}" class="error" th:errors="*{name}"></div>
     </div>
+
     <div>
-        <label for="capacity">Capacity:</label>
-        <input type="number" id="capacity" name="capacity" th:field="*{capacity}" min="1" max="505" required/>
+        <label for="capacity" th:text="#{room.capacity.label}">Capacity:</label>
+        <input type="number" id="capacity" th:field="*{capacity}" min="1" max="505" required/>
+        <div th:if="${#fields.hasErrors('capacity')}" class="error" th:errors="*{capacity}"></div>
     </div>
+
     <div>
-        <button type="submit">Add Room</button>
+        <button type="submit" th:text="#{room.add.submit}">Add Room</button>
     </div>
 </form>
+
 <div th:if="${message}" class="success-message" th:text="${message}"></div>
 </body>
 </html>
