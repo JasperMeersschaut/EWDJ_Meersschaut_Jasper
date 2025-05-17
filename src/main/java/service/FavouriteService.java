@@ -2,13 +2,15 @@ package service;
 
 import domain.Event;
 import domain.User;
+import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class FavouritesService {
+@Service
+public class FavouriteService {
     public List<Event> getSortedFavorites(User user) {
         if (user == null) {
             return Collections.emptyList();

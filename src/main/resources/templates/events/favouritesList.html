@@ -1,23 +1,31 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Favourites</title>
+    <link rel="stylesheet" type="text/css" href="/css/eventsList.css">
+    <link rel="stylesheet" type="text/css" href="/css/header.css">
+</head>
 <body>
-<!-- Fragment for displaying favorites list -->
-<div th:fragment="favorietenLijst" class="favorites-list">
-    <!-- This will be populated with favorite events -->
-    <div class="no-favorites" th:if="${favorieten == null || #lists.isEmpty(favorieten)}">
-        <span th:text="#{account.noFavorites}">Je hebt nog geen favoriete events.</span>
-    </div>
-    <div class="favorite-event" th:if="${favorieten != null}" th:each="event : ${favorieten}"
-         th:onclick="|location.href='/event/${event.id}'|"
-         style="cursor: pointer;">
-        <h3 th:text="${event.name}"></h3>
-        <p th:text="${event.description}"></p>
-        <p>
-            <span th:text="${#temporals.format(event.eventDateTime, 'dd-MM-yyyy HH:mm')}"></span>
-            <span th:text="${event.lokaal.name}"></span>
+<div th:replace="~{fragments/header :: header}"></div>
+<h1 th:text="#{events.favourites}">Favourites</h1>
+
+<div th:if="${#lists.isEmpty(favourites)}">
+    <p th:text="#{account.noFavorites}">You have no favorite events.</p>
+</div>
+<div class="events-container" th:if="${!#lists.isEmpty(favourites)}">
+    <div class="event-card" th:each="event : ${favourites}">
+        <h2>
+            <a th:href="@{/events/{id}(id=${event.id})}" th:text="${event.name}">Event Name</a>
+        </h2>
+        <p><strong th:text="#{events.speakers}">Speakers:</strong> <span
+                th:text="${event.speakers}">Speaker Names</span></p>
+        <p><strong th:text="#{events.room}"></strong> <span class="room" th:text="${event.room.name}">Room Name</span>
         </p>
-        <p class="event-price" th:text="${'€' + event.price}"></p>
+        <p><strong th:text="#{events.dateTime}">Date & Time:</strong>
+            <span th:text="${#temporals.format(event.eventDateTime, 'yyyy-MM-dd - HH:mm')}">Event Date</span>
+        </p>
     </div>
 </div>
+<a th:href="@{/events}">Back to Events</a>
 </body>
 </html>
