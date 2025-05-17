@@ -47,16 +47,19 @@ public class EventController {
 
         boolean isFavourite = false;
         int favouriteCount = 0;
+        boolean maxFavouritesReached = false;
         if (authentication != null && authentication.isAuthenticated()) {
             String username = authentication.getName();
             User user = userRepository.findUserByUsername(username).orElse(null);
             if (user != null) {
                 isFavourite = user.getFavourites().contains(event);
                 favouriteCount = user.getFavourites().size();
+                maxFavouritesReached = favouriteCount >= 5;
             }
         }
         model.addAttribute("isFavourite", isFavourite);
         model.addAttribute("favouriteCount", favouriteCount);
+        model.addAttribute("maxFavouritesReached", maxFavouritesReached);
 
         return "eventDetails";
     }

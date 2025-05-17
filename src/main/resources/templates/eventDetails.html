@@ -18,8 +18,8 @@
         <form th:action="@{/favourites/add}" method="post" style="display:inline;">
             <input type="hidden" name="eventId" th:value="${event.id}"/>
             <button type="submit"
-                    th:disabled="${isFavourite or favouriteCount >= 5}"
-                    th:text="${isFavourite} ? 'Favourited' : (favouriteCount >= 5 ? 'Max 5 favourites' : 'Favourite')"
+                    th:disabled="${isFavourite or maxFavouritesReached}"
+                    th:text="${isFavourite} ? 'Favourited' : (maxFavouritesReached ? 'Max 5 favourites' : 'Favourite')"
                     class="favourites-button">
                 Favourite
             </button>
