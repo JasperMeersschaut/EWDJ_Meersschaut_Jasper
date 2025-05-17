@@ -1,12 +1,17 @@
 package com.example.ewdj_jasper_meersschaut;
 
 import domain.Event;
+import domain.User;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import repository.UserRepository;
 import service.EventService;
+import service.FavouriteService;
 import service.RoomService;
 
 @Controller
@@ -28,18 +33,31 @@ public class EventController {
         return "eventsList";
     }
 
-//    @GetMapping("/favourites")
-//    public String getUserFavorites(Authentication authentication, Model model) {
-//        String username = authentication.getName();
-//        List<Event> favorieten = eventService.getUserFavorites(username);
-//        model.addAttribute("favorieten", favorieten);
-//        return "events/favouritesList";
-//    }
+
+    @Autowired
+    private FavouriteService favouriteService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping("/{id}")
-    public String viewEvent(@PathVariable Long id, Model model) {
+    public String viewEvent(@PathVariable Long id, Model model, Authentication authentication) {
         Event event = eventService.findById(id);
         model.addAttribute("event", event);
+
+        boolean isFavourite = false;
+        int favouriteCount = 0;
+        if (authentication != null && authentication.isAuthenticated()) {
+            String username = authentication.getName();
+            User user = userRepository.findUserByUsername(username).orElse(null);
+            if (user != null) {
+                isFavourite = user.getFavourites().contains(event);
+                favouriteCount = user.getFavourites().size();
+            }
+        }
+        model.addAttribute("isFavourite", isFavourite);
+        model.addAttribute("favouriteCount", favouriteCount);
+
         return "eventDetails";
     }
 

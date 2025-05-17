@@ -13,12 +13,18 @@
     <p><strong>Capacity:</strong> <span th:text="${event.room.capacity}">Room Capacity</span></p>
     <p><strong>Date & Time: </strong> <span th:text="${#temporals.format(event.eventDateTime, 'yyyy-MM-dd - HH:mm')}">Event Date</span>
     <p>
-
-        <th:block th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
-            <a href="/event/{id}/edit" class="favourites-button">Edit</a>
-        </th:block>
-        <th:block th:unless="${#authorization.expression('hasRole(''ADMIN'')')}">
-            <a>Favourite</a>
+    <th:block
+            th:if="${#authorization.expression('isAuthenticated()') and !#authorization.expression('hasRole(''ADMIN'')')}">
+        <form th:action="@{/favourites/add}" method="post" style="display:inline;">
+            <input type="hidden" name="eventId" th:value="${event.id}"/>
+            <button type="submit"
+                    th:disabled="${isFavourite or favouriteCount >= 5}"
+                    th:text="${isFavourite} ? 'Favourited' : (favouriteCount >= 5 ? 'Max 5 favourites' : 'Favourite')"
+                    class="favourites-button">
+                Favourite
+            </button>
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        </form>
         </th:block>
 
         <a th:href="@{/events}">Back to Events</a>
