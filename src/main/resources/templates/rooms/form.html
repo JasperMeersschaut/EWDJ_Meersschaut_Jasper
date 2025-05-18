@@ -12,6 +12,10 @@
         <div class="room-form-header">
             <h5 th:text="#{room.add}"></h5>
         </div>
+        <div th:if="${successMessage}" class="success-message"
+             style="color: green; margin-bottom: 15px; text-align: center;">
+            <p th:text="#{room.added(${successMessage[0]}, ${successMessage[1]})}"></p>
+        </div>
         <div class="room-form-body">
             <form th:action="@{/rooms}" th:object="${room}" method="post">
                 <!-- Room Name -->

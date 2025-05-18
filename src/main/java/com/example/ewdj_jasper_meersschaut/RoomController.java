@@ -32,22 +32,20 @@ public class RoomController {
     public String addRoom(@Valid @ModelAttribute Room room, BindingResult result,
                           Model model, RedirectAttributes attributes) {
         if (result.hasErrors()) {
-            //model.addAttribute("rooms", roomService.getAllRooms());
             return "rooms/form";
         }
         if (roomService.existsByName(room.getName())) {
             result.rejectValue("name", "duplicate", "Room name already exists");
-            //model.addAttribute("rooms", roomService.getAllRooms());
             return "rooms/form";
         }
         try {
             roomService.save(room);
-            attributes.addFlashAttribute("success",
-                    String.format("Room %s with capacity %d was added", room.getName(), room.getCapacity()));
-            return "redirect:/";
+            attributes.addFlashAttribute("successMessage",
+                    new Object[]{room.getName(), room.getCapacity()});
+            return "redirect:/rooms/create";
         } catch (Exception e) {
-            attributes.addFlashAttribute("error", e.getMessage());
-            return "redirect:/";
+            model.addAttribute("errorMessage", e.getMessage());
+            return "rooms/form";
         }
     }
 }
