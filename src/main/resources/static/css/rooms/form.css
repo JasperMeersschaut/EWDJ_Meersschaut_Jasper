@@ -50,7 +50,7 @@
 }
 
 .form-input:focus {
-    border-color: #6366f1;
+    border-color: #2b8a84;
     outline: none;
     box-shadow: 0 0 0 2px #e0e7ff;
 }
@@ -70,7 +70,7 @@
 .form-submit {
     width: 100%;
     padding: 12px 0;
-    background: #6366f1;
+    background: #2b8a84;
     color: #fff;
     font-size: 1rem;
     font-weight: 500;
@@ -81,5 +81,5 @@
 }
 
 .form-submit:hover {
-    background: #4f46e5;
+    background: #246e69;
 }

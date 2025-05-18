@@ -2,9 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Create Event</title>
-    <link rel="stylesheet" type="text/css" href="/css/form.css">
+    <link rel="stylesheet" type="text/css" href="/css/events/form.css">
+    <link rel="stylesheet" type="text/css" href="/css/header.css">
+
 </head>
 <body>
+<div th:replace="~{fragments/header :: header}"></div>
 <h1>Create Event</h1>
 <form th:action="@{/events}" th:object="${event}" method="post">
     <div>
