@@ -1,39 +1,43 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
     <title th:text="#{login.title}">Login Page</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/css/login.css}"/>
     <link rel="stylesheet" type="text/css" href="/css/header.css">
 </head>
-<body onload='document.loginForm.username.focus();'>
+<body>
 <div th:replace="~{fragments/header :: header}"></div>
 
-<div id="login-box">
-    <h3 th:text="#{login.subtitle}">Login with Username and Password</h3>
+<div class="login-container">
+    <div class="login-card">
+        <div class="login-header">
+            <h1 th:text="#{login.title}">Login Page</h1>
+            <p th:text="#{login.subtitle}">Login with Username and Password</p>
+        </div>
 
-    <div th:if="${error}" class="error" th:text="#{login.error}"></div>
-    <div th:if="${msg}" class="msg" th:text="#{login.msg}"></div>
+        <div th:if="${param.error}" class="alert alert-danger" th:text="#{login.error}">
+            Invalid username and password!
+        </div>
+        <div th:if="${param.logout}" class="alert alert-success" th:text="#{login.msg}">
+            You've been logged out successfully.
+        </div>
 
-    <form th:action="@{/login}" method="post">
-        <table>
-            <tr>
-                <td th:text="#{login.username}">User:</td>
-                <td><input type='text' name='username' value=''></td>
-            </tr>
-            <tr>
-                <td th:text="#{login.password}">Password:</td>
-                <td><input type='password' name='password'/></td>
-            </tr>
-            <tr>
-                <td colspan='2'>
-                    <button name="submit" type="submit" th:text="#{login.submit}">Login</button>
-                </td>
-            </tr>
-        </table>
+        <form th:action="@{/login}" method="post">
+            <div class="form-group">
+                <label for="username" class="form-label" th:text="#{login.username}">User:</label>
+                <input type="text" class="form-input" id="username" name="username" autofocus required/>
+            </div>
 
-        <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
-    </form>
+            <div class="form-group">
+                <label for="password" class="form-label" th:text="#{login.password}">Password:</label>
+                <input type="password" class="form-input" id="password" name="password" required/>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="form-submit" th:text="#{login.submit}">Login</button>
+            </div>
+        </form>
+    </div>
 </div>
 </body>
 </html>
