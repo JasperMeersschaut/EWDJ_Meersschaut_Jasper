@@ -33,7 +33,7 @@ public class Event implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "room_id", nullable = false)
-    @NotNull(message = "{event.room.required}")
+//    @NotNull(message = "{event.room.required}")
     private Room room;
 
     @Future(message = "{event.date.future}")
