@@ -40,6 +40,7 @@ public class SecurityConfig {
                         requests.requestMatchers("/login**").permitAll()
                                 .requestMatchers("/css/**").permitAll()
                                 .requestMatchers("/403**").permitAll()
+                                .requestMatchers("/404**").permitAll()
                                 .requestMatchers("/", "/events", "/events/*").permitAll()
                                 .requestMatchers("/events/create").hasRole("ADMIN")
                                 .requestMatchers("/events/favourites").hasRole("USER")

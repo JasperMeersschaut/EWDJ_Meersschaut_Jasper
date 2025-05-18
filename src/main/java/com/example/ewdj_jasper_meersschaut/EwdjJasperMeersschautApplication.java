@@ -33,6 +33,7 @@ public class EwdjJasperMeersschautApplication implements WebMvcConfigurer {
         registry.addViewController("/rooms/create").setViewName("rooms/form");
         registry.addViewController("/events/{id}").setViewName("eventDetails");
         registry.addViewController("/403").setViewName("403");
+        registry.addViewController("/404").setViewName("404");
     }
 
     @Bean
