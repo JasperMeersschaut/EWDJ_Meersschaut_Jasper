@@ -51,8 +51,10 @@ public class Event implements Serializable {
     private int projectorCheck;
 
     @NotNull(message = "{event.price.required}")
-    @DecimalMin(value = "0.0", inclusive = true, message = "{event.price.min}")
+    @DecimalMin(value = "9.99", inclusive = true, message = "{event.price.unvalid}")
+    @DecimalMax(value = "99.99", inclusive = false, message = "{event.price.unvalid}")
     private double price;
+
 
     public Event(String name, String description, List<String> speakers, Room room,
                  LocalDateTime eventDateTime, int projectorCode, int projectorCheck, double price) {

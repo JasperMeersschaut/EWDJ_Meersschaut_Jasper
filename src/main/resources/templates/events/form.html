@@ -19,7 +19,7 @@
             <form th:action="@{/events/create}" th:object="${event}" method="post">
                 <!-- Name -->
                 <div class="form-group">
-                    <label for="name" class="form-label">Name*</label>
+                    <label for="name" class="form-label" th:text="#{event.name.label}">Name*</label>
                     <input
                             type="text"
                             class="form-input"
@@ -32,7 +32,7 @@
 
                 <!-- Description -->
                 <div class="form-group">
-                    <label for="description" class="form-label">Description</label>
+                    <label for="description" class="form-label" th:text="#{event.description.label}">Description</label>
                     <textarea
                             class="form-textarea"
                             id="description"
@@ -42,7 +42,7 @@
 
                 <!-- Speakers -->
                 <div class="form-group">
-                    <label class="form-label">Speakers*</label>
+                    <label class="form-label" th:text="#{event.speakers.label}">Speakers*</label>
                     <div class="speakers-container">
                         <div class="speaker-row" th:each="speaker, stat : *{speakers}">
                             <input
@@ -67,7 +67,7 @@
                     <!-- Room Selection -->
                     <div class="grid-col">
                         <div class="form-group">
-                            <label for="roomId" class="form-label">Room*</label>
+                            <label for="roomId" class="form-label" th:text="#{event.room.label}">Room*</label>
                             <select
                                     class="form-select"
                                     id="roomId"
@@ -89,7 +89,8 @@
                     <!-- Date & Time -->
                     <div class="grid-col">
                         <div class="form-group">
-                            <label for="eventDateTime" class="form-label">Date & Time*</label>
+                            <label for="eventDateTime" class="form-label" th:text="#{event.datetime.label}">Date &
+                                Time*</label>
                             <input
                                     type="datetime-local"
                                     class="form-input"
@@ -97,7 +98,7 @@
                                     th:field="*{eventDateTime}"
                                     required
                             />
-                            <p class="form-hint">Must be between June 1-30, 2025</p>
+                            <p class="form-hint" th:text="#{event.datetime.hint}">Must be between June 1-30, 2025</p>
                             <p class="form-error" th:if="${#fields.hasErrors('eventDateTime')}"
                                th:errors="*{eventDateTime}"></p>
                         </div>
@@ -108,7 +109,8 @@
                     <!-- Projector Code -->
                     <div class="grid-col">
                         <div class="form-group">
-                            <label for="projectorCode" class="form-label">Projector Code*</label>
+                            <label for="projectorCode" class="form-label" th:text="#{event.projectorCode.label}">Projector
+                                Code*</label>
                             <input
                                     type="number"
                                     class="form-input"
@@ -118,7 +120,7 @@
                                     max="9999"
                                     required
                             />
-                            <p class="form-hint">4-digit number</p>
+                            <p class="form-hint" th:text="#{event.projectorCode.hint}">4-digit number</p>
                             <p class="form-error" th:if="${#fields.hasErrors('projectorCode')}"
                                th:errors="*{projectorCode}"></p>
                         </div>
@@ -127,7 +129,8 @@
                     <!-- Projector Check -->
                     <div class="grid-col">
                         <div class="form-group">
-                            <label for="projectorCheck" class="form-label">Projector Check*</label>
+                            <label for="projectorCheck" class="form-label" th:text="#{event.projectorCheck.label}">Projector
+                                Check*</label>
                             <input
                                     type="number"
                                     class="form-input"
@@ -137,7 +140,8 @@
                                     max="96"
                                     required
                             />
-                            <p class="form-hint">Remainder of projector code ÷ 97 (0-96)</p>
+                            <p class="form-hint" th:text="#{event.projectorCheck.hint}">Remainder of projector code ÷ 97
+                                (0-96)</p>
                             <p class="form-error" th:if="${#fields.hasErrors('projectorCheck')}"
                                th:errors="*{projectorCheck}"></p>
                         </div>
@@ -146,7 +150,7 @@
 
                 <!-- Price -->
                 <div class="form-group">
-                    <label for="price" class="form-label">Price*</label>
+                    <label for="price" class="form-label" th:text="#{event.price.label}">Price*</label>
                     <input
                             type="number"
                             class="form-input"
@@ -160,8 +164,8 @@
                 </div>
 
                 <div class="form-actions">
-                    <button type="submit" class="form-submit">Create Event</button>
-                    <a th:href="@{/events}" class="form-cancel">Cancel</a>
+                    <button type="submit" class="form-submit" th:text="#{event.submit}">Create Event</button>
+                    <a th:href="@{/events}" class="form-cancel" th:text="#{event.cancel}">Cancel</a>
                 </div>
             </form>
         </div>
