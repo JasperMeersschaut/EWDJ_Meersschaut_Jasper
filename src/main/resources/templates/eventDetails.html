@@ -1,41 +1,71 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Event Details</title>
+    <title th:text="${event.name}">Event Details</title>
     <link rel="stylesheet" type="text/css" href="/css/eventDetails.css">
+    <link rel="stylesheet" type="text/css" href="/css/header.css">
 </head>
 <body>
+<div th:replace="~{fragments/header :: header}"></div>
+
 <div class="container">
     <h1 th:text="${event.name}">Event Name</h1>
-    <p><strong>Description:</strong> <span th:text="${event.description}">Event Description</span></p>
-    <p><strong>Speakers:</strong> <span th:text="${event.speakers}">Speaker Names</span></p>
-    <p><strong>Room:</strong> <span th:text="${event.room.name}">Room Name</span></p>
-    <p><strong>Capacity:</strong> <span th:text="${event.room.capacity}">Room Capacity</span></p>
-    <p><strong>Date & Time: </strong> <span th:text="${#temporals.format(event.eventDateTime, 'yyyy-MM-dd - HH:mm')}">Event Date</span>
-    <p>
-    <th:block
-            th:if="${#authorization.expression('isAuthenticated()') and !#authorization.expression('hasRole(''ADMIN'')')}">
-        <!-- If event is already a favourite -->
-        <form th:if="${isFavourite}" th:action="@{/favourites/remove}" method="post">
-            <input type="hidden" name="eventId" th:value="${event.id}"/>
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-            <button type="submit">Remove Favourite</button>
-        </form>
 
-        <!-- If event is not a favourite and user hasn't reached max -->
-        <form th:if="${!isFavourite and !maxFavouritesReached}" th:action="@{/favourites/add}" method="post">
-            <input type="hidden" name="eventId" th:value="${event.id}"/>
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-            <button type="submit">Add Favourite</button>
-        </form>
+    <div class="price-tag" th:text="${#numbers.formatDecimal(event.price, 1, 2) + ' €'}">0.00 €</div>
 
-        <!-- If user reached max favourites -->
-        <button th:if="${!isFavourite and maxFavouritesReached}" disabled>Max 5 favourites</button>
+    <div class="event-description">
+        <strong>Description:</strong>
+        <p th:text="${event.description}">Event Description</p>
+    </div>
 
+    <div class="event-details-grid">
+        <div class="event-detail-item">
+            <strong>Speakers:</strong>
+            <div class="speakers-list">
+                <span class="speaker-badge" th:each="speaker : ${event.speakers}"
+                      th:text="${speaker}">Speaker Name</span>
+            </div>
+        </div>
 
-    </th:block>
+        <div class="event-detail-item">
+            <strong>Room:</strong>
+            <p th:text="${event.room.name + ' (Capacity: ' + event.room.capacity + ')'}">Room Name</p>
+        </div>
 
-        <a th:href="@{/events}">Back to Events</a>
+        <div class="event-detail-item">
+            <strong>Date & Time:</strong>
+            <p th:text="${#temporals.format(event.eventDateTime, 'yyyy-MM-dd - HH:mm')}">Event Date</p>
+        </div>
+
+        <div class="event-detail-item">
+            <strong>Projector Code:</strong>
+            <p th:text="${event.projectorCode + ' (Check: ' + event.projectorCheck + ')'}">Projector Info</p>
+        </div>
+    </div>
+
+    <div class="action-buttons">
+        <th:block
+                th:if="${#authorization.expression('isAuthenticated()') and !#authorization.expression('hasRole(''ADMIN'')')}">
+            <!-- If event is already a favourite -->
+            <form th:if="${isFavourite}" th:action="@{/favourites/remove}" method="post">
+                <input type="hidden" name="eventId" th:value="${event.id}"/>
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <button type="submit" class="favorite-remove">Remove from Favourites</button>
+            </form>
+
+            <!-- If event is not a favourite and user hasn't reached max -->
+            <form th:if="${!isFavourite and !maxFavouritesReached}" th:action="@{/favourites/add}" method="post">
+                <input type="hidden" name="eventId" th:value="${event.id}"/>
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <button type="submit" class="favorite-add">Add to Favourites</button>
+            </form>
+
+            <!-- If user reached max favourites -->
+            <button th:if="${!isFavourite and maxFavouritesReached}" disabled>Max 5 favourites reached</button>
+        </th:block>
+
+        <a th:href="@{/events}" class="back-button">Back to Events</a>
+    </div>
 </div>
 </body>
 </html>
