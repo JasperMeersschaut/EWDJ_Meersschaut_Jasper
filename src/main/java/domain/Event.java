@@ -3,6 +3,8 @@ package domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import validator.ProjectorCheckValid;
+import validator.UniqueSpeakersValid;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -13,6 +15,8 @@ import java.util.List;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(exclude = "id")
+@ProjectorCheckValid
+@UniqueSpeakersValid
 @ToString(exclude = "id")
 public class Event implements Serializable {
     @Id
