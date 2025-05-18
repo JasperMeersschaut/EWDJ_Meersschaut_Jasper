@@ -5,26 +5,50 @@
     <link rel="stylesheet" type="text/css" href="/css/rooms/form.css">
 </head>
 <body>
-<h1 th:text="#{room.create.title}">Create Room</h1>
-
-<form th:action="@{/rooms}" th:object="${room}" method="post">
-    <div>
-        <label for="name" th:text="#{room.name.label}">Room Name:</label>
-        <input type="text" id="name" th:field="*{name}" required/>
-        <div th:if="${#fields.hasErrors('name')}" class="error" th:errors="*{name}"></div>
+<div class="room-form-container">
+    <div class="room-form-card">
+        <div class="room-form-header">
+            <h5 th:text="#{room.add}"></h5>
+        </div>
+        <div class="room-form-body">
+            <form th:action="@{/rooms}" th:object="${room}" method="post">
+                <!-- Room Name -->
+                <div class="form-group">
+                    <label for="name" class="form-label" th:text="#{room.name.label.required}"></label>
+                    <input
+                            type="text"
+                            class="form-input"
+                            id="name"
+                            th:field="*{name}"
+                            th:placeholder="#{room.name.placeholder}"
+                            required
+                    />
+                    <p class="form-hint" th:text="#{room.name.format}"></p>
+                    <p class="form-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+                </div>
+                <!-- Capacity -->
+                <div class="form-group">
+                    <label for="capacity" class="form-label" th:text="#{room.capacity.label.required}"></label>
+                    <input
+                            type="number"
+                            class="form-input"
+                            id="capacity"
+                            th:field="*{capacity}"
+                            min="1"
+                            max="50"
+                            required
+                    />
+                    <p class="form-hint" th:text="#{room.capacity.format}"></p>
+                    <p class="form-error" th:if="${#fields.hasErrors('capacity')}" th:errors="*{capacity}"></p>
+                </div>
+                <button
+                        type="submit"
+                        class="form-submit"
+                        th:text="#{button.add.room}"
+                ></button>
+            </form>
+        </div>
     </div>
-
-    <div>
-        <label for="capacity" th:text="#{room.capacity.label}">Capacity:</label>
-        <input type="number" id="capacity" th:field="*{capacity}" min="1" max="505" required/>
-        <div th:if="${#fields.hasErrors('capacity')}" class="error" th:errors="*{capacity}"></div>
-    </div>
-
-    <div>
-        <button type="submit" th:text="#{room.add.submit}">Add Room</button>
-    </div>
-</form>
-
-<div th:if="${message}" class="success-message" th:text="${message}"></div>
+</div>
 </body>
 </html>
