@@ -1,14 +1,13 @@
 package com.example.ewdj_jasper_meersschaut;
 
+import domain.Event;
 import domain.Room;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.*;
+import service.EventService;
 import service.RoomService;
 
 @Controller
@@ -17,8 +16,11 @@ public class RoomController {
 
     private final RoomService roomService;
 
-    public RoomController(RoomService roomService) {
+    private final EventService eventService;
+
+    public RoomController(RoomService roomService, EventService eventService) {
         this.roomService = roomService;
+        this.eventService = eventService;
     }
 
     @GetMapping("/create")
@@ -27,24 +29,36 @@ public class RoomController {
         return "rooms/form";
     }
 
-    @PostMapping
-    public String addRoom(@ModelAttribute Room room, BindingResult result,
-                          Model model, RedirectAttributes attributes) {
+    @PostMapping("/create")
+    public String addEvent(@ModelAttribute @Valid Event event, BindingResult result, @RequestParam("room.id") Long roomId, Model model) {
+        System.out.println("Speakers: " + event.getSpeakers());
+        System.out.println("Room: " + event.getRoom());
+        System.out.println("Room id: " + roomId);
+        System.out.println("Datetime: " + event.getEventDateTime());
+
+        Room room = roomService.findById(roomId);
+        event.setRoom(room);
+        System.out.println("Room: " + room);
+        System.out.println("Event room: " + event.getRoom());
         if (result.hasErrors()) {
-            return "rooms/form";
-        }
-        if (roomService.existsByName(room.getName())) {
-            result.rejectValue("name", "duplicate", "Room name already exists");
-            return "rooms/form";
+            model.addAttribute("rooms", roomService.findAll());
+            System.out.println("Validation errors: " + result.getAllErrors());
+            return "events/form";
         }
         try {
-            roomService.save(room);
-            attributes.addFlashAttribute("successMessage",
-                    new Object[]{room.getName(), room.getCapacity()});
-            return "redirect:/rooms/create";
+
+            System.out.println("Speakers: " + event.getSpeakers());
+            System.out.println("Room: " + event.getRoom());
+            System.out.println("Room id: " + roomId);
+            System.out.println("Datetime: " + event.getEventDateTime());
+
+            eventService.save(event);
+            return "redirect:/events";
         } catch (Exception e) {
             model.addAttribute("errorMessage", e.getMessage());
-            return "rooms/form";
+            model.addAttribute("rooms", roomService.findAll());
+            return "events/form";
         }
+
     }
 }

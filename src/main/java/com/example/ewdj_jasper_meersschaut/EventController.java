@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import repository.UserRepository;
 import service.EventService;
 import service.FavouriteService;
@@ -74,25 +73,56 @@ public class EventController {
         return "events/form";
     }
 
-    @PostMapping("/events/create")
-    public String addEvent(@Valid @ModelAttribute("event") Event event, BindingResult result, @RequestParam("roomId") Long roomId, Model model, RedirectAttributes attributes) {
+    //    @PostMapping("/create")
+//    public String addEvent(@Valid @ModelAttribute("event") Event event, BindingResult result, @RequestParam("roomId") Long roomId, Model model, RedirectAttributes attributes) {
+//        System.out.println(roomId);
+//        if (result.hasErrors()) {
+//            model.addAttribute("rooms", roomService.findAll());
+//            return "events/form";
+//        }
+//
+//        try {
+//            Room room = roomService.findById(roomId);
+//            event.setRoom(room);
+//            eventService.save(event);
+//            attributes.addFlashAttribute("success", String.format("Event %s was added", event.getName()));
+//            return "redirect:/";
+//        } catch (Exception e) {
+//            model.addAttribute("error", e.getMessage());
+//            model.addAttribute("rooms", roomService.findAll());
+//            return "events/form";
+//        }
+//    }
+    @PostMapping("/create")
+    public String addEvent(@ModelAttribute @Valid Event event, BindingResult result, @RequestParam("roomId") Long roomId, Model model) {
+        System.out.println("Speakers: " + event.getSpeakers());
+        System.out.println("Room: " + event.getRoom());
+        System.out.println("Room id: " + roomId);
+        System.out.println("Datetime: " + event.getEventDateTime());
 
+        Room room = roomService.findById(roomId);
+        event.setRoom(room);
+        System.out.println("Room: " + room);
+        System.out.println("Event room: " + event.getRoom());
         if (result.hasErrors()) {
             model.addAttribute("rooms", roomService.findAll());
-            return "event-form";
+            System.out.println("Validation errors: " + result.getAllErrors());
+            return "events/form";
         }
-
         try {
-            Room room = roomService.findById(roomId);
-            event.setRoom(room);
+            System.out.println("Speakers: " + event.getSpeakers());
+            System.out.println("Room: " + event.getRoom());
+            System.out.println("Room id: " + roomId);
+            System.out.println("Datetime: " + event.getEventDateTime());
+            System.out.println("Event before save: " + event);
             eventService.save(event);
-            attributes.addFlashAttribute("success", "Event added successfully");
-            return "redirect:/";
+            return "redirect:/events";
         } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
+            model.addAttribute("errorMessage", e.getMessage());
             model.addAttribute("rooms", roomService.findAll());
             return "events/form";
         }
+
     }
 
 }
