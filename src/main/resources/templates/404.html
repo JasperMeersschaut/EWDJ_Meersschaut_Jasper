@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>404 - Page Not Found</title>
+    <title th:text="#{error.404.title}">404 - Page Not Found</title>
     <link rel="stylesheet" type="text/css" href="/css/header.css">
     <style>
         body {
@@ -80,12 +80,12 @@
 <div class="error-container">
     <div class="error-card">
         <div class="error-code">404</div>
-        <h1 class="error-title">Page Not Found</h1>
-        <p class="error-message">
+        <h1 class="error-title" th:text="#{error.404.title}">Page Not Found</h1>
+        <p class="error-message" th:text="#{error.404.message}">
             The page you are looking for doesn't exist or has been moved.
             Please check the URL or navigate back to the homepage.
         </p>
-        <a href="/events" class="home-button">Go to Events</a>
+        <a href="/events" class="home-button" th:text="#{button.back.events}">Go to Events</a>
     </div>
 </div>
 </body>
