@@ -18,12 +18,17 @@ public class RoomService {
         this.roomRepository = roomRepository;
     }
 
-    public List<Room> getAllRooms() {
+    public List<Room> findAll() {
         return roomRepository.findAll();
     }
 
     public boolean existsByName(String name) {
         return roomRepository.existsByName(name);
+    }
+
+    public Room findById(Long id) {
+        return roomRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Room not found with id: " + id));
     }
 
     @Transactional

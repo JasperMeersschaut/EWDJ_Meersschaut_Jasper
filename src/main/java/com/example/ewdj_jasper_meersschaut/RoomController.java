@@ -1,7 +1,6 @@
 package com.example.ewdj_jasper_meersschaut;
 
 import domain.Room;
-import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,7 +28,7 @@ public class RoomController {
     }
 
     @PostMapping
-    public String addRoom(@Valid @ModelAttribute Room room, BindingResult result,
+    public String addRoom(@ModelAttribute Room room, BindingResult result,
                           Model model, RedirectAttributes attributes) {
         if (result.hasErrors()) {
             return "rooms/form";
