@@ -41,37 +41,40 @@ public class InitDataConfig implements CommandLineRunner {
                 room1,
                 LocalDateTime.of(2025, 6, 15, 9, 0),
                 2345,
-                78,
+                2345 % 97,  // Correct value: 81
                 59
         );
+
         Event event2 = new Event(
                 "Cybersecurity Summit",
                 "Exploring the latest trends in cybersecurity",
                 List.of("Charlie Green", "Diana Black"),
                 room2,
-                LocalDateTime.of(2025, 7, 10, 14, 0),
+                LocalDateTime.of(2025, 6, 10, 14, 0),  // Changed to June
                 3456,
-                89,
+                3456 % 97,  // Correct value: 87
                 79
         );
+
         Event event3 = new Event(
                 "Cloud Computing Conference",
                 "Learn about advancements in cloud technologies",
                 List.of("Eve Blue", "Frank Yellow"),
                 room3,
-                LocalDateTime.of(2025, 8, 20, 11, 0),
+                LocalDateTime.of(2025, 6, 20, 11, 0),  // Changed to June
                 4567,
-                90,
+                4567 % 97,  // Correct value: 4
                 99
         );
+
         Event event4 = new Event(
                 "Web Development Bootcamp",
                 "Master modern web development techniques",
                 List.of("Grace Red", "Hank Purple"),
                 room4,
-                LocalDateTime.of(2025, 9, 5, 16, 0),
+                LocalDateTime.of(2025, 6, 25, 16, 0),  // Changed to June
                 5678,
-                67,
+                5678 % 97,  // Correct value: 21
                 49
         );
 
