@@ -1,12 +1,15 @@
 package service;
 
 import domain.Event;
+import domain.Room;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import repository.EventRepository;
 import repository.UserRepository;
+
+import java.time.LocalDateTime;
 
 @Service
 public class EventService {
@@ -25,6 +28,15 @@ public class EventService {
     public Object getAllEvents() {
         return eventRepository.findAll();
     }
+
+    public boolean existsByNameAndEventDateTimeBetween(String name, LocalDateTime start, LocalDateTime end) {
+        return eventRepository.existsByNameAndEventDateTimeBetween(name, start, end);
+    }
+
+    public boolean existsByRoomAndEventDateTime(Room room, LocalDateTime eventDateTime) {
+        return eventRepository.existsByRoomAndEventDateTime(room, eventDateTime);
+    }
+
 
     @Transactional
     public void save(@Valid Event event) {

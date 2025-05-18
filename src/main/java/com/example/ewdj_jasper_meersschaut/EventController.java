@@ -15,6 +15,9 @@ import service.EventService;
 import service.FavouriteService;
 import service.RoomService;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Controller
 @RequestMapping("/events")
 public class EventController {
@@ -73,56 +76,41 @@ public class EventController {
         return "events/form";
     }
 
-    //    @PostMapping("/create")
-//    public String addEvent(@Valid @ModelAttribute("event") Event event, BindingResult result, @RequestParam("roomId") Long roomId, Model model, RedirectAttributes attributes) {
-//        System.out.println(roomId);
-//        if (result.hasErrors()) {
-//            model.addAttribute("rooms", roomService.findAll());
-//            return "events/form";
-//        }
-//
-//        try {
-//            Room room = roomService.findById(roomId);
-//            event.setRoom(room);
-//            eventService.save(event);
-//            attributes.addFlashAttribute("success", String.format("Event %s was added", event.getName()));
-//            return "redirect:/";
-//        } catch (Exception e) {
-//            model.addAttribute("error", e.getMessage());
-//            model.addAttribute("rooms", roomService.findAll());
-//            return "events/form";
-//        }
-//    }
     @PostMapping("/create")
     public String addEvent(@ModelAttribute @Valid Event event, BindingResult result, @RequestParam("roomId") Long roomId, Model model) {
-        System.out.println("Speakers: " + event.getSpeakers());
-        System.out.println("Room: " + event.getRoom());
-        System.out.println("Room id: " + roomId);
-        System.out.println("Datetime: " + event.getEventDateTime());
-
+        // Set the room from the roomId
         Room room = roomService.findById(roomId);
         event.setRoom(room);
-        System.out.println("Room: " + room);
-        System.out.println("Event room: " + event.getRoom());
+
+        // Validate event uniqueness - no duplicate event at same time in same room
+        if (eventService.existsByRoomAndEventDateTime(event.getRoom(), event.getEventDateTime())) {
+            result.rejectValue("eventDateTime", "event.room.time.conflict", "Another event is already scheduled in this room at the same time");
+        }
+
+        // Validate event name uniqueness on the same day
+        if (event.getEventDateTime() != null) {
+            LocalDate eventDate = event.getEventDateTime().toLocalDate();
+            LocalDateTime startOfDay = eventDate.atStartOfDay();
+            LocalDateTime endOfDay = eventDate.plusDays(1).atStartOfDay().minusSeconds(1);
+
+            if (eventService.existsByNameAndEventDateTimeBetween(event.getName(), startOfDay, endOfDay)) {
+                result.rejectValue("name", "event.name.duplicate", "An event with this name already exists on the same day");
+            }
+        }
+
         if (result.hasErrors()) {
             model.addAttribute("rooms", roomService.findAll());
-            System.out.println("Validation errors: " + result.getAllErrors());
             return "events/form";
         }
+
         try {
-            System.out.println("Speakers: " + event.getSpeakers());
-            System.out.println("Room: " + event.getRoom());
-            System.out.println("Room id: " + roomId);
-            System.out.println("Datetime: " + event.getEventDateTime());
-            System.out.println("Event before save: " + event);
             eventService.save(event);
             return "redirect:/events";
         } catch (Exception e) {
-            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("error", e.getMessage());
             model.addAttribute("rooms", roomService.findAll());
             return "events/form";
         }
-
     }
 
 }

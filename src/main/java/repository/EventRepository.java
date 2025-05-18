@@ -8,4 +8,6 @@ import java.time.LocalDateTime;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
     boolean existsByRoomAndEventDateTime(Room room, LocalDateTime eventDateTime);
+
+    boolean existsByNameAndEventDateTimeBetween(String name, LocalDateTime start, LocalDateTime end);
 }
