@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Events List</title>
+    <link rel="stylesheet" type="text/css" href="/css/events/eventsList.css">
+    <link rel="stylesheet" type="text/css" href="/css/header.css">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="container">
+    <div class="page-header">
+        <h1 th:text="#{events.title}">Events</h1>
+        <div class="action-buttons">
+            <th:block
+                    th:if="${#authorization.expression('isAuthenticated()') and !#authorization.expression('hasRole(''ADMIN'')')}">
+                <a href="/favourites" class="btn btn-secondary" th:text="#{events.favourites}">Favourites</a>
+            </th:block>
+            <th:block th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+                <a href="/events/create" class="btn btn-primary">Create Event</a>
+                <a href="/rooms/create" class="btn btn-secondary">Add Room</a>
+            </th:block>
+        </div>
+    </div>
+
+    <div th:if="${#lists.isEmpty(eventsList)}" class="no-events">
+        <p>No events available. Please check back later or create a new event.</p>
+    </div>
+
+    <div th:if="${not #lists.isEmpty(eventsList)}" class="events-grid">
+        <div class="event-card" th:each="event : ${eventsList}">
+            <div class="event-header">
+                <h2><a th:href="@{/events/{id}(id=${event.id})}" th:text="${event.name}">Event Name</a></h2>
+            </div>
+            <div class="event-body">
+                <div class="event-detail">
+                    <span class="detail-label" th:text="#{events.speakers}">Speakers:</span>
+                    <span class="detail-value" th:text="${event.speakers}">Speaker Names</span>
+                </div>
+                <div class="event-detail">
+                    <span class="detail-label" th:text="#{events.room}">Room:</span>
+                    <span class="detail-value">
+                        <span class="room-badge" th:text="${event.room.name}">Room Name</span>
+                    </span>
+                </div>
+                <div class="event-detail">
+                    <span class="detail-label" th:text="#{events.dateTime}">Date & Time:</span>
+                    <span class="detail-value"
+                          th:text="${#temporals.format(event.eventDateTime, 'yyyy-MM-dd - HH:mm')}">Event Date</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
