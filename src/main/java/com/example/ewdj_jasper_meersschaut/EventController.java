@@ -1,6 +1,7 @@
 package com.example.ewdj_jasper_meersschaut;
 
 import domain.Event;
+import domain.Room;
 import domain.User;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import repository.UserRepository;
 import service.EventService;
 import service.FavouriteService;
@@ -36,6 +38,7 @@ public class EventController {
 
     @Autowired
     private FavouriteService favouriteService;
+
 
     @Autowired
     private UserRepository userRepository;
@@ -67,32 +70,29 @@ public class EventController {
     @GetMapping("/create")
     public String showCreateEventForm(Model model) {
         model.addAttribute("event", Event.EventFactory.createEvent());
-        model.addAttribute("rooms", roomService.getAllRooms());
+        model.addAttribute("rooms", roomService.findAll());
         return "events/form";
     }
 
-    //    @PostMapping("/create")
-//    public String addEvent(@ModelAttribute @Valid Event event, BindingResult result, Model model) {
-//        if (result.hasErrors()) {
-//            model.addAttribute("rooms", roomService.getAllRooms());
-//            return "events/form";
-//        }
-//        eventService.saveEvent(event);
-//        return "redirect:/events";
-//    }
-    @PostMapping("/create")
-    public String addEvent(@ModelAttribute Event event, Model model) {
-        eventService.saveEvent(event);
+    @PostMapping("/events/create")
+    public String addEvent(@Valid @ModelAttribute("event") Event event, BindingResult result, @RequestParam("roomId") Long roomId, Model model, RedirectAttributes attributes) {
 
-        return "redirect:/events";
-    }
-
-    @PostMapping
-    public String addEvent(@ModelAttribute @Valid Event event, BindingResult result) {
         if (result.hasErrors()) {
+            model.addAttribute("rooms", roomService.findAll());
+            return "event-form";
+        }
+
+        try {
+            Room room = roomService.findById(roomId);
+            event.setRoom(room);
+            eventService.save(event);
+            attributes.addFlashAttribute("success", "Event added successfully");
+            return "redirect:/";
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("rooms", roomService.findAll());
             return "events/form";
         }
-        eventService.saveEvent(event);
-        return "redirect:/events";
     }
+
 }

@@ -1,6 +1,7 @@
 package service;
 
 import domain.Event;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,8 +26,10 @@ public class EventService {
         return eventRepository.findAll();
     }
 
-    public void saveEvent(@Valid Event event) {
+    @Transactional
+    public void save(@Valid Event event) {
         eventRepository.save(event);
+        System.out.println("Aantal events in DB: " + eventRepository.count());
     }
 
     public Event findById(Long id) {

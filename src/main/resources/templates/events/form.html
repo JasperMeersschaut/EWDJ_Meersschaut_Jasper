@@ -9,7 +9,7 @@
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
 <h1>Create Event</h1>
-<form th:action="@{/events}" th:object="${event}" method="post">
+<form th:action="@{/events/create}" th:object="${event}" method="post">
     <div>
         <label for="name">Name:</label>
         <input type="text" id="name" name="name" th:field="*{name}" required/>
