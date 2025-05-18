@@ -1,19 +1,14 @@
 package domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
-import validator.ValidRoom;
 
 @Getter
 @Setter
-@ValidRoom
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(exclude = "id")
@@ -24,12 +19,14 @@ public class Room {
     @Setter(AccessLevel.NONE)
     private Long id;
 
+    @Column(nullable = false, unique = true)
     @NotBlank(message = "{room.name.required}")
     @Pattern(regexp = "^[A-Za-z]\\d{3}$", message = "{room.name.invalid}")
     private String name;
 
-    @Min(value = 1, message = "{room.capacity.invalid}")
-    @Max(value = 505, message = "{room.capacity.invalid}")
+    @Column(nullable = false)
+    @Min(value = 1, message = "{validation.room.capacity.min}")
+    @Max(value = 50, message = "{validation.room.capacity.max}")
     private int capacity;
 
     public Room(String name, int capacity) {

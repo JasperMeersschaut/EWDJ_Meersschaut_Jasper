@@ -27,10 +27,10 @@ public class InitDataConfig implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        Room room1 = new Room("A101", 100);
+        Room room1 = new Room("A101", 12);
         Room room2 = new Room("B202", 50);
-        Room room3 = new Room("C303", 200);
-        Room room4 = new Room("D404", 150);
+        Room room3 = new Room("C303", 50);
+        Room room4 = new Room("D404", 45);
 
         roomRepository.saveAll(List.of(room1, room2, room3, room4));
 
