@@ -2,7 +2,6 @@ package service;
 
 import domain.Room;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import repository.RoomRepository;
@@ -23,8 +22,12 @@ public class RoomService {
         return roomRepository.findAll();
     }
 
+    public boolean existsByName(String name) {
+        return roomRepository.existsByName(name);
+    }
+
     @Transactional
-    public void saveRoom(@Valid Room room) {
+    public void save(Room room) {
         roomRepository.save(room);
         System.out.println("Saved room: " + room);
     }

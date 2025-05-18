@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import service.RoomService;
 
 @Controller
@@ -28,12 +29,25 @@ public class RoomController {
     }
 
     @PostMapping
-    public String addRoom(@ModelAttribute @Valid Room room, BindingResult result, Model model) {
+    public String addRoom(@Valid @ModelAttribute Room room, BindingResult result,
+                          Model model, RedirectAttributes attributes) {
         if (result.hasErrors()) {
-            return "rooms/form";
+            //   model.addAttribute("rooms", roomService.getAllRooms());
+            return "room-management";
         }
-        roomService.saveRoom(room);
-        model.addAttribute("message", "Room '" + room.getName() + "' with capacity " + room.getCapacity() + " was added.");
-        return "rooms/form";
+        if (roomService.existsByName(room.getName())) {
+            result.rejectValue("name", "duplicate", "Room name already exists");
+            // model.addAttribute("rooms", roomService.getAllRooms());
+            return "room-management";
+        }
+        try {
+            roomService.save(room);
+            attributes.addFlashAttribute("success",
+                    String.format("Room %s with capacity %d was added", room.getName(), room.getCapacity()));
+            return "redirect:/";
+        } catch (Exception e) {
+            attributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/";
+        }
     }
 }
