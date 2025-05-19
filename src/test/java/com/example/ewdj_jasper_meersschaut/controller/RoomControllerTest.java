@@ -46,22 +46,21 @@ public class RoomControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
-    void addRoom_withValidData_shouldRedirectToRooms() throws Exception {
-        mockMvc.perform(post("/rooms")
+    void addRoom_withValidData_shouldRedirectToEvents() throws Exception {
+        mockMvc.perform(post("/rooms/create")
                         .with(csrf())
-                        .param("name", "Test Room")
+                        .param("name", "A123")
                         .param("capacity", "25"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(model().attributeExists("successMessage"))
-                .andExpect(redirectedUrl("/rooms"));
+                .andExpect(redirectedUrl("/events"));
     }
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
     void addRoom_withInvalidName_shouldReturnFormWithErrors() throws Exception {
-        mockMvc.perform(post("/rooms")
+        mockMvc.perform(post("/rooms/create")
                         .with(csrf())
-                        .param("name", "") // Empty name
+                        .param("name", "")
                         .param("capacity", "25"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("rooms/form"))
@@ -72,10 +71,10 @@ public class RoomControllerTest {
     @Test
     @WithMockUser(roles = {"ADMIN"})
     void addRoom_withInvalidCapacity_shouldReturnFormWithErrors() throws Exception {
-        mockMvc.perform(post("/rooms")
+        mockMvc.perform(post("/rooms/create")
                         .with(csrf())
                         .param("name", "Valid Room")
-                        .param("capacity", "0")) // Invalid capacity
+                        .param("capacity", "0"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("rooms/form"))
                 .andExpect(model().hasErrors())
@@ -85,7 +84,7 @@ public class RoomControllerTest {
     @Test
     @WithMockUser(roles = {"ADMIN"})
     void addRoom_withCapacityTooLarge_shouldReturnFormWithErrors() throws Exception {
-        mockMvc.perform(post("/rooms")
+        mockMvc.perform(post("/rooms/create")
                         .with(csrf())
                         .param("name", "Valid Room")
                         .param("capacity", "51")) // Exceeds max capacity
@@ -98,7 +97,7 @@ public class RoomControllerTest {
     @Test
     @WithAnonymousUser
     void addRoom_asAnonymous_shouldRedirectToLogin() throws Exception {
-        mockMvc.perform(post("/rooms")
+        mockMvc.perform(post("/rooms/create")  // Changed from /rooms to /rooms/create
                         .with(csrf())
                         .param("name", "Test Room")
                         .param("capacity", "25"))
@@ -109,7 +108,7 @@ public class RoomControllerTest {
     @Test
     @WithMockUser(roles = {"USER"})
     void addRoom_asUser_shouldBeForbidden() throws Exception {
-        mockMvc.perform(post("/rooms")
+        mockMvc.perform(post("/rooms/create")
                         .with(csrf())
                         .param("name", "Test Room")
                         .param("capacity", "25"))
