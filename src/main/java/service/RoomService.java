@@ -31,6 +31,12 @@ public class RoomService {
                 .orElseThrow(() -> new IllegalArgumentException("Room not found with id: " + id));
     }
 
+    public int findCapacityById(Long id) {
+        return roomRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Room not found with id: " + id))
+                .getCapacity();
+    }
+
     @Transactional
     public void save(Room room) {
         roomRepository.save(room);
