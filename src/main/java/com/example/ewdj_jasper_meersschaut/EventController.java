@@ -111,7 +111,7 @@ public class EventController {
         }
     }
 
-    @GetMapping("/events/{id}/edit")
+    @GetMapping("/{id}/edit")
     public String showEditEventForm(@PathVariable Long id, Model model) {
         Event event = eventService.findById(id);
         model.addAttribute("event", event);
@@ -119,28 +119,27 @@ public class EventController {
         return "events/form";
     }
 
-    @PostMapping("/events/{id}/edit")
-    public String updateEvent(@PathVariable Long id, @Valid @ModelAttribute("event") Event event,
-                              BindingResult result, @RequestParam("roomId") Long roomId,
-                              Model model, RedirectAttributes attributes) {
-
-        if (result.hasErrors()) {
+    @PostMapping("/{id}/update")
+    public String updateEvent(
+            @PathVariable Long id,
+            @Valid @ModelAttribute("event") Event event,
+            BindingResult bindingResult,
+            @RequestParam("roomId") Long roomId,
+            Model model,
+            RedirectAttributes redirectAttributes
+    ) {
+        if (bindingResult.hasErrors()) {
             model.addAttribute("rooms", roomService.findAll());
-            return "events/form";
+            return "events/eventForm";
         }
 
-        try {
-            Room room = roomService.findById(roomId);
-            event.setId(id);
-            event.setRoom(room);
-            eventService.save(event);
-            attributes.addFlashAttribute("success", "Event updated successfully");
-            return "redirect:/events/" + id;
-        } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
-            model.addAttribute("rooms", roomService.findAll());
-            return "events/form";
-        }
+        event.setRoom(roomService.findById(roomId));
+        event.setId(id);
+
+        eventService.save(event);
+        redirectAttributes.addFlashAttribute("success", "Event updated successfully.");
+        return "redirect:/events";
     }
+
 
 }
