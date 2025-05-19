@@ -1,4 +1,4 @@
-package com.example.ewdj_jasper_meersschaut;
+package com.example.ewdj_jasper_meersschaut.controller;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;

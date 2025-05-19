@@ -1,5 +1,6 @@
 package domain;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -13,6 +14,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(exclude = "id")
 @ToString(exclude = "id")
+@JsonPropertyOrder({"id", "name", "capacity"})
 public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
