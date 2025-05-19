@@ -9,201 +9,187 @@
 <div th:replace="~{fragments/header :: header}"></div>
 <th:block th:with="isEdit=${event != null and event.id != null}">
     <div class="event-form-container">
-    <div class="event-form-card">
-        <div class="event-form-header">
-            <h5>Create Event</h5>
-        </div>
-        <div class="event-form-body">
-            <div th:if="${error}" class="form-error" style="margin-bottom: 20px;" th:text="${error}"></div>
+        <div class="event-form-card">
+            <div class="event-form-header">
+                <h5>Create Event</h5>
+            </div>
+            <div class="event-form-body">
+                <div th:if="${error}" class="form-error" style="margin-bottom: 20px;" th:text="${error}"></div>
 
-            <form th:action="${isEdit ? '/events/' + event.id + '/update' : '/events/create'}" th:object="${event}"
-                  method="post">
-                <input type="hidden" th:if="${isEdit}" th:field="*{id}"/>
-                <!-- Name -->
-                <div class="form-group">
-                    <label for="name" class="form-label" th:text="#{event.name.label}">Name*</label>
-                    <input
-                            type="text"
-                            class="form-input"
-                            id="name"
-                            th:field="*{name}"
-                    />
-                    <p class="form-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
-                </div>
-
-                <!-- Description -->
-                <div class="form-group">
-                    <label for="description" class="form-label" th:text="#{event.description.label}">Description</label>
-                    <textarea
-                            class="form-textarea"
-                            id="description"
-                            th:field="*{description}"
-                    ></textarea>
-                </div>
-
-                <!-- Speakers -->
-                <div class="form-group">
-                    <label class="form-label" th:text="#{event.speakers.label}">Speakers*</label>
-                    <div class="speakers-container">
-                        <div class="speaker-row" th:each="speaker, stat : *{speakers}">
-                            <input
-                                    type="text"
-                                    class="form-input"
-                                    th:field="*{speakers[__${stat.index}__]}"
-                            />
-                            <button type="button" class="remove-speaker-btn" th:if="${stat.index > 0}"
-                                    onclick="this.parentElement.remove()">Remove
-                            </button>
-                        </div>
-                    </div>
-                    <button type="button" class="add-speaker-btn"
-                            onclick="addSpeaker()"
-                            th:attr="data-max-speakers='3'">Add Speaker
-                    </button>
-                    <p class="form-error" th:if="${#fields.hasErrors('speakers')}" th:errors="*{speakers}"></p>
-                </div>
-
-                <div class="grid-row">
-                    <!-- Room Selection -->
-                    <div class="grid-col">
-                        <div class="form-group">
-                            <label for="roomId" class="form-label" th:text="#{event.room.label}">Room*</label>
-                            <select
-                                    class="form-select"
-                                    id="roomId"
-                                    name="roomId"
-                            >
-                                <!--                                <option value="" th:text="#{event.select.room}">Select a room</option>-->
-                                <option
-                                        th:each="room : ${rooms}"
-                                        th:value="${room.id}"
-                                        th:text="${#messages.msgOrNull('event.room.details.format', room.name, room.capacity) ?: (room.name + ' (Capacity: ' + room.capacity + ')')}"
-                                        th:selected="${event.room != null && event.room.id == room.id}"
-                                ></option>
-                            </select>
-                            <p class="form-error" th:if="${#fields.hasErrors('room')}" th:errors="*{room}"></p>
-                        </div>
+                <form th:action="${isEdit ? '/events/' + event.id + '/update' : '/events/create'}" th:object="${event}"
+                      method="post">
+                    <input type="hidden" th:if="${isEdit}" th:field="*{id}"/>
+                    <!-- Name -->
+                    <div class="form-group">
+                        <label for="name" class="form-label" th:text="#{event.name.label}">Name*</label>
+                        <input
+                                type="text"
+                                class="form-input"
+                                id="name"
+                                th:field="*{name}"
+                        />
+                        <p class="form-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
                     </div>
 
-                    <!-- Date & Time -->
-                    <div class="grid-col">
-                        <div class="form-group">
-                            <label for="eventDateTime" class="form-label" th:text="#{event.datetime.label}">Date &
-                                Time*</label>
-                            <input
-                                    type="datetime-local"
-                                    class="form-input"
-                                    id="eventDateTime"
-                                    th:field="*{eventDateTime}"
-                                    th:value="${event.eventDateTime != null ? #temporals.format(event.eventDateTime, 'yyyy-MM-dd''T''HH:mm') : ''}"
-                            />
-                            <p class="form-hint" th:text="#{event.datetime.hint}">Must be between June 1-30, 2025</p>
-                            <p class="form-error" th:if="${#fields.hasErrors('eventDateTime')}"
-                               th:errors="*{eventDateTime}"></p>
-                        </div>
+                    <!-- Description -->
+                    <div class="form-group">
+                        <label for="description" class="form-label"
+                               th:text="#{event.description.label}">Description</label>
+                        <textarea
+                                class="form-textarea"
+                                id="description"
+                                th:field="*{description}"
+                        ></textarea>
                     </div>
-                </div>
 
-                <div class="grid-row">
-                    <!-- Projector Code -->
-                    <div class="grid-col">
-                        <div class="form-group">
-                            <label for="projectorCode" class="form-label" th:text="#{event.projectorCode.label}">Projector
-                                Code*</label>
-                            <input
-                                    type="number"
-                                    class="form-input"
-                                    id="projectorCode"
-                                    th:field="*{projectorCode}"
-                                    min="1000"
-                                    max="9999"
-                            />
-                            <p class="form-hint" th:text="#{event.projectorCode.hint}">4-digit number</p>
-                            <p class="form-error" th:if="${#fields.hasErrors('projectorCode')}"
-                               th:errors="*{projectorCode}"></p>
+                    <!-- Speakers (3 fixed fields) -->
+                    <div class="form-group">
+                        <label class="form-label" th:text="#{event.speakers.label}">Speakers*</label>
+                        <div class="speakers-container">
+                            <!-- Speaker 1 -->
+                            <div class="speaker-row">
+                                <label for="speaker0" class="form-label">Speaker 1</label>
+                                <input
+                                        type="text"
+                                        class="form-input"
+                                        id="speaker0"
+                                        th:field="*{speakers[0]}"
+                                />
+                            </div>
+                            <!-- Speaker 2 -->
+                            <div class="speaker-row">
+                                <label for="speaker1" class="form-label">Speaker 2</label>
+                                <input
+                                        type="text"
+                                        class="form-input"
+                                        id="speaker1"
+                                        th:field="*{speakers[1]}"
+                                />
+                            </div>
+                            <!-- Speaker 3 -->
+                            <div class="speaker-row">
+                                <label for="speaker2" class="form-label">Speaker 3</label>
+                                <input
+                                        type="text"
+                                        class="form-input"
+                                        id="speaker2"
+                                        th:field="*{speakers[2]}"
+                                />
+                            </div>
+                        </div>
+                        <p class="form-error" th:if="${#fields.hasErrors('speakers')}" th:errors="*{speakers}"></p>
+                    </div>
+
+                    <div class="grid-row">
+                        <!-- Room Selection -->
+                        <div class="grid-col">
+                            <div class="form-group">
+                                <label for="roomId" class="form-label" th:text="#{event.room.label}">Room*</label>
+                                <select
+                                        class="form-select"
+                                        id="roomId"
+                                        name="roomId">
+                                    <option
+                                            th:each="room : ${rooms}"
+                                            th:value="${room.id}"
+                                            th:text="${#messages.msgOrNull('event.room.details.format', room.name, room.capacity) ?: (room.name + ' (Capacity: ' + room.capacity + ')')}"
+                                            th:selected="${event != null && event.room != null && event.room.id == room.id}">
+                                    </option>
+                                </select>
+                                <p class="form-error" th:if="${#fields.hasErrors('room')}" th:errors="*{room}"></p>
+                            </div>
+                        </div>
+
+                        <!-- Date & Time -->
+                        <div class="grid-col">
+                            <div class="form-group">
+                                <label for="eventDateTime" class="form-label" th:text="#{event.datetime.label}">Date &
+                                    Time*</label>
+                                <input
+                                        type="datetime-local"
+                                        class="form-input"
+                                        id="eventDateTime"
+                                        th:field="*{eventDateTime}"
+                                        th:value="${event != null && event.eventDateTime != null ? #temporals.format(event.eventDateTime, 'yyyy-MM-dd''T''HH:mm') : ''}"
+                                />
+                                <p class="form-hint" th:text="#{event.datetime.hint}">Must be between June 1-30,
+                                    2025</p>
+                                <p class="form-error" th:if="${#fields.hasErrors('eventDateTime')}"
+                                   th:errors="*{eventDateTime}"></p>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Projector Check -->
-                    <div class="grid-col">
-                        <div class="form-group">
-                            <label for="projectorCheck" class="form-label" th:text="#{event.projectorCheck.label}">Projector
-                                Check*</label>
-                            <input
-                                    type="number"
-                                    class="form-input"
-                                    id="projectorCheck"
-                                    th:field="*{projectorCheck}"
-                                    min="0"
-                                    max="96"
-                            />
-                            <p class="form-hint" th:text="#{event.projectorCheck.hint}">Remainder of projector code ÷ 97
-                                (0-96)</p>
-                            <p class="form-error" th:if="${#fields.hasErrors('projectorCheck')}"
-                               th:errors="*{projectorCheck}"></p>
+                    <div class="grid-row">
+                        <!-- Projector Code -->
+                        <div class="grid-col">
+                            <div class="form-group">
+                                <label for="projectorCode" class="form-label" th:text="#{event.projectorCode.label}">Projector
+                                    Code*</label>
+                                <input
+                                        type="number"
+                                        class="form-input"
+                                        id="projectorCode"
+                                        th:field="*{projectorCode}"
+                                        min="1000"
+                                        max="9999"
+                                />
+                                <p class="form-hint" th:text="#{event.projectorCode.hint}">4-digit number</p>
+                                <p class="form-error" th:if="${#fields.hasErrors('projectorCode')}"
+                                   th:errors="*{projectorCode}"></p>
+                            </div>
+                        </div>
+
+                        <!-- Projector Check -->
+                        <div class="grid-col">
+                            <div class="form-group">
+                                <label for="projectorCheck" class="form-label" th:text="#{event.projectorCheck.label}">Projector
+                                    Check*</label>
+                                <input
+                                        type="number"
+                                        class="form-input"
+                                        id="projectorCheck"
+                                        th:field="*{projectorCheck}"
+                                        min="0"
+                                        max="96"
+                                />
+                                <p class="form-hint" th:text="#{event.projectorCheck.hint}">Remainder of projector code
+                                    ÷ 97
+                                    (0-96)</p>
+                                <p class="form-error" th:if="${#fields.hasErrors('projectorCheck')}"
+                                   th:errors="*{projectorCheck}"></p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Price -->
-                <div class="form-group">
-                    <label for="price" class="form-label" th:text="#{event.price.label}">Price*</label>
-                    <input
-                            type="number"
-                            class="form-input"
-                            id="price"
-                            th:field="*{price}"
-                            step="0.01"
-                            min="0"
-                    />
-                    <p class="form-error" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></p>
-                </div>
+                    <!-- Price -->
+                    <div class="form-group">
+                        <label for="price" class="form-label" th:text="#{event.price.label}">Price*</label>
+                        <input
+                                type="number"
+                                class="form-input"
+                                id="price"
+                                th:field="*{price}"
+                                step="0.01"
+                                min="0"
+                        />
+                        <p class="form-error" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></p>
+                    </div>
 
-                <div class="form-actions">
-                    <button type="submit" class="form-submit"
-                            th:text="${isEdit} ? #{event.edit} : #{event.submit}">
-                        Create Event
-                    </button>
-                    <a th:href="@{/events}" class="form-cancel" th:text="#{event.cancel}">Cancel</a>
-                </div>
-            </form>
+                    <div class="form-actions">
+                        <button type="submit" class="form-submit"
+                                th:text="${isEdit} ? #{event.edit} : #{event.submit}">
+                            Create Event
+                        </button>
+                        <a th:href="@{/events}" class="form-cancel" th:text="#{event.cancel}">Cancel</a>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
+</th:block>
 
 <script>
-    function addSpeaker() {
-        const container = document.querySelector('.speakers-container');
-        const speakerRows = container.querySelectorAll('.speaker-row');
-        const maxSpeakers = document.querySelector('.add-speaker-btn').getAttribute('data-max-speakers');
-
-        if (speakerRows.length >= maxSpeakers) {
-            alert('Maximum ' + maxSpeakers + ' speakers are allowed');
-            return;
-        }
-
-        const newRow = document.createElement('div');
-        newRow.className = 'speaker-row';
-
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.className = 'form-input';
-        input.name = 'speakers[' + speakerRows.length + ']';
-        // input.required = true;
-
-        const removeBtn = document.createElement('button');
-        removeBtn.type = 'button';
-        removeBtn.className = 'remove-speaker-btn';
-        removeBtn.textContent = 'Remove';
-        removeBtn.onclick = function () {
-            this.parentElement.remove();
-        };
-
-        newRow.appendChild(input);
-        newRow.appendChild(removeBtn);
-        container.appendChild(newRow);
-    }
-
     document.addEventListener('DOMContentLoaded', function () {
         const projectorCodeInput = document.getElementById('projectorCode');
         const projectorCheckInput = document.getElementById('projectorCheck');

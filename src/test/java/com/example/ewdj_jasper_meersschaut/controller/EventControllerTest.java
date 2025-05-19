@@ -108,11 +108,13 @@ class EventControllerTest {
     void updateEvent_withInvalidData_shouldReturnFormViewWithErrors() throws Exception {
         mockMvc.perform(post("/events/1/update")
                         .with(csrf())
-                        .param("name", "")  // Invalid name (empty)
+                        .param("name", "")
                         .param("roomId", "1")
-                        .param("speakers[0]", "Speaker1"))
+                        .param("speakers[0]", "Speaker1")
+                        .param("eventDateTime", "2025-06-21T10:00:00"))
+
                 .andExpect(status().isOk())
-                .andExpect(view().name("events/form"))  // Should match the actual template name
+                .andExpect(view().name("events/form"))
                 .andExpect(model().attributeExists("rooms"))
                 .andExpect(model().hasErrors());
     }
