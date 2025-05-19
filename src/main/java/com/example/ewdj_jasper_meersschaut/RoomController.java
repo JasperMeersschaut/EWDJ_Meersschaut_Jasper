@@ -31,27 +31,13 @@ public class RoomController {
 
     @PostMapping("/create")
     public String addEvent(@ModelAttribute @Valid Event event, BindingResult result, @RequestParam("room.id") Long roomId, Model model) {
-        System.out.println("Speakers: " + event.getSpeakers());
-        System.out.println("Room: " + event.getRoom());
-        System.out.println("Room id: " + roomId);
-        System.out.println("Datetime: " + event.getEventDateTime());
-
         Room room = roomService.findById(roomId);
-        event.setRoom(room);
-        System.out.println("Room: " + room);
-        System.out.println("Event room: " + event.getRoom());
         if (result.hasErrors()) {
             model.addAttribute("rooms", roomService.findAll());
             System.out.println("Validation errors: " + result.getAllErrors());
             return "events/form";
         }
         try {
-
-            System.out.println("Speakers: " + event.getSpeakers());
-            System.out.println("Room: " + event.getRoom());
-            System.out.println("Room id: " + roomId);
-            System.out.println("Datetime: " + event.getEventDateTime());
-
             eventService.save(event);
             return "redirect:/events";
         } catch (Exception e) {
