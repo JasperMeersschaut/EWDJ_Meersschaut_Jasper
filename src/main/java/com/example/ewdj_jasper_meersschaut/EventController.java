@@ -83,7 +83,7 @@ public class EventController {
     }
 
     @PostMapping("/create")
-    public String addEvent(@ModelAttribute @Valid Event event, BindingResult result, @RequestParam("roomId") Long roomId, Model model) {
+    public String addEvent(@ModelAttribute @Valid Event event, BindingResult result, @RequestParam("roomId") Long roomId, Model model, RedirectAttributes redirectAttributes) {
         Room room = roomService.findById(roomId);
         event.setRoom(room);
 
@@ -108,6 +108,7 @@ public class EventController {
 
         try {
             eventService.save(event);
+            redirectAttributes.addFlashAttribute("successMessage", "Event " + event.getName() + " has been successfully created");
             return "redirect:/events";
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
@@ -147,9 +148,15 @@ public class EventController {
         event.setRoom(roomService.findById(roomId));
         event.setId(id);
 
-        eventService.save(event);
-        redirectAttributes.addFlashAttribute("success", "Event updated successfully.");
-        return "redirect:/events";
+        try {
+            eventService.save(event);
+            redirectAttributes.addFlashAttribute("successMessage", "Event " + event.getName() + " has been successfully updated");
+            return "redirect:/events";
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("rooms", roomService.findAll());
+            return "events/form";
+        }
     }
 
 

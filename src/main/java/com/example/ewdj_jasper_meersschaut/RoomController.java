@@ -41,9 +41,8 @@ public class RoomController {
 
         try {
             roomService.save(room);
-            // Add success message with room name and capacity as parameters
-            redirectAttributes.addFlashAttribute("successMessage", new String[]{room.getName(), String.valueOf(room.getCapacity())});
-            return "redirect:/rooms/form";
+            redirectAttributes.addFlashAttribute("successMessage", "Room " + room.getName() + " with capacity " + room.getCapacity() + " has been successfully created");
+            return "redirect:/events";
         } catch (Exception e) {
             model.addAttribute("errorMessage", "Error saving room: " + e.getMessage());
             return "rooms/form";
