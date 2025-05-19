@@ -17,7 +17,7 @@
             <p th:text="#{room.added(${successMessage[0]}, ${successMessage[1]})}"></p>
         </div>
         <div class="room-form-body">
-            <form th:action="@{/rooms}" th:object="${room}" method="post">
+            <form th:action="@{/rooms/create}" th:object="${room}" method="post">
                 <!-- Room Name -->
                 <div class="form-group">
                     <label for="name" class="form-label" th:text="#{room.name.label.required}"></label>

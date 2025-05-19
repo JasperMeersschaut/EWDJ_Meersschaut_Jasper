@@ -46,6 +46,8 @@ public class SecurityConfig {
                                 .requestMatchers("/events/*").permitAll()
                                 .requestMatchers("/events/*/edit").hasRole("ADMIN")
                                 .requestMatchers("/events/*/update").hasRole("ADMIN")
+                                .requestMatchers("/rooms/form").hasRole("ADMIN")
+                                .requestMatchers("/rooms/create").hasRole("ADMIN")
                                 .requestMatchers("/favourites").hasRole("USER")
                                 .requestMatchers("/favourites/*").hasRole("USER")
                                 .requestMatchers("/rooms/create").hasRole("ADMIN")

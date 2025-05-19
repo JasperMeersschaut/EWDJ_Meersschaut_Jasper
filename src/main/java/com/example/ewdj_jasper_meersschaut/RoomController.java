@@ -1,13 +1,15 @@
 package com.example.ewdj_jasper_meersschaut;
 
-import domain.Event;
 import domain.Room;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import service.EventService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import service.RoomService;
 
 @Controller
@@ -16,11 +18,8 @@ public class RoomController {
 
     private final RoomService roomService;
 
-    private final EventService eventService;
-
-    public RoomController(RoomService roomService, EventService eventService) {
+    public RoomController(RoomService roomService) {
         this.roomService = roomService;
-        this.eventService = eventService;
     }
 
     @GetMapping("/create")
@@ -30,21 +29,24 @@ public class RoomController {
     }
 
     @PostMapping("/create")
-    public String addEvent(@ModelAttribute @Valid Event event, BindingResult result, @RequestParam("room.id") Long roomId, Model model) {
-        Room room = roomService.findById(roomId);
-        if (result.hasErrors()) {
-            model.addAttribute("rooms", roomService.findAll());
-            System.out.println("Validation errors: " + result.getAllErrors());
-            return "events/form";
-        }
-        try {
-            eventService.save(event);
-            return "redirect:/events";
-        } catch (Exception e) {
-            model.addAttribute("errorMessage", e.getMessage());
-            model.addAttribute("rooms", roomService.findAll());
-            return "events/form";
+    public String addRoom(@ModelAttribute @Valid Room room, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
+        if (roomService.existsByName(room.getName())) {
+            result.rejectValue("name", "room.name.duplicate", "A room with this name already exists");
         }
 
+        if (result.hasErrors()) {
+            model.addAttribute("errorMessage", "Please correct the errors in the form");
+            return "rooms/form";
+        }
+
+        try {
+            roomService.save(room);
+            // Add success message with room name and capacity as parameters
+            redirectAttributes.addFlashAttribute("successMessage", new String[]{room.getName(), String.valueOf(room.getCapacity())});
+            return "redirect:/rooms/form";
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "Error saving room: " + e.getMessage());
+            return "rooms/form";
+        }
     }
 }
