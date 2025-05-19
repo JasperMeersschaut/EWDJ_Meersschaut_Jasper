@@ -46,10 +46,8 @@ public class SecurityConfig {
                                 .requestMatchers("/events/*").permitAll()
                                 .requestMatchers("/events/*/edit").hasRole("ADMIN")
                                 .requestMatchers("/events/*/update").hasRole("ADMIN")
-                                .requestMatchers("/events/favourites").hasRole("USER")
-                                .requestMatchers("/events/favourites/*").hasRole("USER")
-                                .requestMatchers("/favourites/*/remove").hasRole("USER")
-                                .requestMatchers("/favourites/*/add").hasRole("USER")
+                                .requestMatchers("/favourites").hasRole("USER")
+                                .requestMatchers("/favourites/*").hasRole("USER")
                                 .requestMatchers("/rooms/create").hasRole("ADMIN")
                                 .requestMatchers("/*")
                                 .access(new WebExpressionAuthorizationManager("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')"))
@@ -65,20 +63,4 @@ public class SecurityConfig {
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

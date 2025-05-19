@@ -87,7 +87,6 @@ public class InitDataConfig implements CommandLineRunner {
         admin.setEmail("admin@example.com");
         admin.setPassword(passwordEncoder.encode("admin"));
         admin.setRoles(Set.of("ROLE_ADMIN"));
-        admin.setFavourites(Set.of(event1, event2));
         admin.setEnabled(true);
 
         User nameUser = new User();
