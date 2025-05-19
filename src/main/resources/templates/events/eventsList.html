@@ -23,6 +23,11 @@
             <h2>
                 <a th:href="@{/events/{id}(id=${event.id})}" th:text="${event.name}">Event Name</a>
             </h2>
+            <div class="event-actions">
+                <a sec:authorize="hasRole('ADMIN')"
+                   th:href="@{/events/{id}/edit(id=${event.id})}"
+                   class="action-button">Edit</a>
+            </div>
             <p><strong th:text="#{events.speakers}">Speakers:</strong> <span
                     th:text="${#strings.listJoin(event.speakers, ', ')}">Speaker Names</span></p>
             <p><strong th:text="#{events.room}">Room:</strong> <span class="room"

@@ -44,7 +44,7 @@ public class SecurityConfig {
                                 .requestMatchers("/events/create").hasRole("ADMIN")
                                 .requestMatchers("/", "/events").permitAll()
                                 .requestMatchers("/events/*").permitAll()
-                                .requestMatchers("/events/favourites").hasRole("USER")
+                                .requestMatchers("/events/*/edit").hasRole("ADMIN").requestMatchers("/events/favourites").hasRole("USER")
                                 .requestMatchers("/rooms/create").hasRole("ADMIN")
                                 .requestMatchers("/*")
                                 .access(new WebExpressionAuthorizationManager("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')"))

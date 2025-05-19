@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import repository.UserRepository;
 import service.EventService;
 import service.FavouriteService;
@@ -78,16 +79,13 @@ public class EventController {
 
     @PostMapping("/create")
     public String addEvent(@ModelAttribute @Valid Event event, BindingResult result, @RequestParam("roomId") Long roomId, Model model) {
-        // Set the room from the roomId
         Room room = roomService.findById(roomId);
         event.setRoom(room);
 
-        // Validate event uniqueness - no duplicate event at same time in same room
         if (eventService.existsByRoomAndEventDateTime(event.getRoom(), event.getEventDateTime())) {
             result.rejectValue("eventDateTime", "event.room.time.conflict", "Another event is already scheduled in this room at the same time");
         }
 
-        // Validate event name uniqueness on the same day
         if (event.getEventDateTime() != null) {
             LocalDate eventDate = event.getEventDateTime().toLocalDate();
             LocalDateTime startOfDay = eventDate.atStartOfDay();
@@ -106,6 +104,38 @@ public class EventController {
         try {
             eventService.save(event);
             return "redirect:/events";
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("rooms", roomService.findAll());
+            return "events/form";
+        }
+    }
+
+    @GetMapping("/events/{id}/edit")
+    public String showEditEventForm(@PathVariable Long id, Model model) {
+        Event event = eventService.findById(id);
+        model.addAttribute("event", event);
+        model.addAttribute("rooms", roomService.findAll());
+        return "events/form";
+    }
+
+    @PostMapping("/events/{id}/edit")
+    public String updateEvent(@PathVariable Long id, @Valid @ModelAttribute("event") Event event,
+                              BindingResult result, @RequestParam("roomId") Long roomId,
+                              Model model, RedirectAttributes attributes) {
+
+        if (result.hasErrors()) {
+            model.addAttribute("rooms", roomService.findAll());
+            return "events/form";
+        }
+
+        try {
+            Room room = roomService.findById(roomId);
+            event.setId(id);
+            event.setRoom(room);
+            eventService.save(event);
+            attributes.addFlashAttribute("success", "Event updated successfully");
+            return "redirect:/events/" + id;
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
             model.addAttribute("rooms", roomService.findAll());

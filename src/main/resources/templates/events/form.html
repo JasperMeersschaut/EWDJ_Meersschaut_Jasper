@@ -7,7 +7,7 @@
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
-
+<th:block th:with="isEdit=${event.id != null}">
 <div class="event-form-container">
     <div class="event-form-card">
         <div class="event-form-header">
@@ -164,7 +164,10 @@
                 </div>
 
                 <div class="form-actions">
-                    <button type="submit" class="form-submit" th:text="#{event.submit}">Create Event</button>
+                    <button type="submit" class="form-submit"
+                            th:text="${isEdit} ? #{event.edit} : #{event.submit}">
+                        Create Event
+                    </button>
                     <a th:href="@{/events}" class="form-cancel" th:text="#{event.cancel}">Cancel</a>
                 </div>
             </form>

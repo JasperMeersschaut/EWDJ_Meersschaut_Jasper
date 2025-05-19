@@ -21,7 +21,6 @@ import java.util.List;
 public class Event implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Setter(AccessLevel.NONE)
     private Long id;
 
     @NotBlank(message = "{event.name.required}")

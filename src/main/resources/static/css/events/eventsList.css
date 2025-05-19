@@ -116,3 +116,9 @@ body {
 .favorites-link:hover {
     background: #e0e0e0;
 }
+
+.event-actions {
+    margin-top: 10px;
+    display: flex;
+    gap: 8px;
+}
