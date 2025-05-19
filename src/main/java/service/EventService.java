@@ -10,6 +10,7 @@ import repository.EventRepository;
 import repository.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class EventService {
@@ -47,5 +48,9 @@ public class EventService {
     public Event findById(Long id) {
         return eventRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Event not found"));
+    }
+
+    public List<Event> findByEventDateTimeBetween(LocalDateTime start, LocalDateTime end) {
+        return eventRepository.findByEventDateTimeBetween(start, end);
     }
 }
