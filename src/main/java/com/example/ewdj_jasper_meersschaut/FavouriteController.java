@@ -2,37 +2,34 @@ package com.example.ewdj_jasper_meersschaut;
 
 import domain.Event;
 import domain.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import repository.UserRepository;
 import service.FavouriteService;
+import service.UserService;
 
 @Controller
 @RequestMapping("/favourites")
 public class FavouriteController {
 
-    private static final Logger logger = LoggerFactory.getLogger(FavouriteController.class);
-
 
     private final FavouriteService favouriteService;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public FavouriteController(FavouriteService favouriteService, UserRepository userRepository) {
+    public FavouriteController(FavouriteService favouriteService, UserService userService) {
         this.favouriteService = favouriteService;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @GetMapping
     public String getUserFavorites(Model model, Authentication authentication) {
         String username = authentication.getName();
-        User user = userRepository.findUserByUsername(username).orElse(null);
+        User user = userService.findUserByUsername(username);
         model.addAttribute("favourites", favouriteService.getSortedFavorites(user));
         return "events/favouritesList";
     }
@@ -51,42 +48,35 @@ public class FavouriteController {
 //        return "redirect:/events/" + eventId;
 //    }
 
-    @PostMapping("/add")
-    public String addFavourite(@RequestParam Long eventId, Authentication authentication) {
-        logger.info("POST /favourites/add called with eventId={}, user={}", eventId, authentication != null ? authentication.getName() : "anonymous");
-        String username = authentication.getName();
-        User user = userRepository.findUserByUsername(username).orElse(null);
-        if (user != null) {
-            logger.info("User found: {}", user.getUsername());
-            logger.info("Current favourites count: {}", user.getFavourites().size());
+    @PostMapping("{id}/add/")
+    public String addFavourite(@PathVariable Long eventId) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findUserByUsername(auth.getName());
+        Event event = favouriteService.findEventById(eventId);
+        if (user != null && event != null) {
             if (user.getFavourites().size() < 5) {
-                Event event = favouriteService.findEventById(eventId);
-                if (event != null) {
-                    logger.info("Event found: {}", event.getName());
-                    // ... add to favourites logic
-                } else {
-                    logger.warn("Event not found for id={}", eventId);
-                }
+                user.getFavourites().add(event);
+                userService.save(user);
             } else {
-                logger.warn("User {} has reached max favourites", user.getUsername());
+                // Handle the case where the user has reached the maximum number of favorites
+                // You can redirect to an error page or show a message
             }
-        } else {
-            logger.warn("User not found: {}", username);
         }
+
+
         return "redirect:/events/" + eventId;
     }
 
-    @PostMapping("/remove")
-    public String removeFavourite(@RequestParam Long eventId, Authentication authentication) {
-        String username = authentication.getName();
-        User user = userRepository.findUserByUsername(username).orElse(null);
-        if (user != null) {
-            Event event = favouriteService.findEventById(eventId);
-            if (event != null) {
-                user.getFavourites().remove(event);
-                userRepository.save(user);
-            }
+    @PostMapping("{id}/remove/")
+    public String removeFavourite(@PathVariable Long eventId) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findUserByUsername(auth.getName());
+        Event event = favouriteService.findEventById(eventId);
+        if (user != null && event != null) {
+            user.getFavourites().remove(event);
+            userService.save(user);
         }
-        return "redirect:/events/" + eventId;
+        return "redirect:/favourites";
     }
+
 }
