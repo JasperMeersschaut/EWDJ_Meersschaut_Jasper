@@ -17,7 +17,6 @@ import service.UserService;
 @RequestMapping("/favourites")
 public class FavouriteController {
 
-
     private final FavouriteService favouriteService;
     private final UserService userService;
 
@@ -34,25 +33,11 @@ public class FavouriteController {
         return "events/favouritesList";
     }
 
-//    @PostMapping("/add")
-//    public String addFavourite(@RequestParam Long eventId, Authentication authentication) {
-//        String username = authentication.getName();
-//        User user = userRepository.findUserByUsername(username).orElse(null);
-//        if (user != null && user.getFavourites().size() < 5) {
-//            Event event = favouriteService.findEventById(eventId);
-//            if (event != null) {
-//                user.getFavourites().add(event);
-//                userRepository.save(user);
-//            }
-//        }
-//        return "redirect:/events/" + eventId;
-//    }
-
-    @PostMapping("{id}/add/")
-    public String addFavourite(@PathVariable Long eventId) {
+    @PostMapping("/{id}/add")
+    public String addFavourite(@PathVariable("id") Long id) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findUserByUsername(auth.getName());
-        Event event = favouriteService.findEventById(eventId);
+        Event event = favouriteService.findEventById(id);
         if (user != null && event != null) {
             if (user.getFavourites().size() < 5) {
                 user.getFavourites().add(event);
@@ -62,21 +47,18 @@ public class FavouriteController {
                 // You can redirect to an error page or show a message
             }
         }
-
-
-        return "redirect:/events/" + eventId;
+        return "redirect:/events/" + id;
     }
 
-    @PostMapping("{id}/remove/")
-    public String removeFavourite(@PathVariable Long eventId) {
+    @PostMapping("/{id}/remove")
+    public String removeFavourite(@PathVariable("id") Long id) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findUserByUsername(auth.getName());
-        Event event = favouriteService.findEventById(eventId);
+        Event event = favouriteService.findEventById(id);
         if (user != null && event != null) {
             user.getFavourites().remove(event);
             userService.save(user);
         }
-        return "redirect:/favourites";
+        return "redirect:/events/" + id;
     }
-
 }
