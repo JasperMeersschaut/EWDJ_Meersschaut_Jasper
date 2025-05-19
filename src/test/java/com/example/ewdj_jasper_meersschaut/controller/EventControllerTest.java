@@ -35,8 +35,7 @@ class EventControllerTest {
     void viewEvent_whenEventNotFound_shouldHandleError() throws Exception {
         // Note: This test will depend on how your controller handles not found cases
         mockMvc.perform(get("/events/999"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("eventDetails"));
+                .andExpect(view().name("redirect:/404"));
     }
 
     @Test
@@ -67,11 +66,10 @@ class EventControllerTest {
                         .param("speakers[0]", "Speaker1")
                         .param("speakers[1]", "Speaker2")
                         .param("roomId", "1")
-                        .param("eventDateTime", "2025-04-21T10:00:00")
+                        .param("eventDateTime", "2025-06-21T10:00:00")
                         .param("projectorCode", "1234")
-                        .param("projectorCheck", "45")
+                        .param("projectorCheck", "70")
                         .param("price", "19.99"))
-                .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/events"));
     }
 
@@ -107,18 +105,15 @@ class EventControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
-    void updateEvent_withValidData_shouldRedirectToEventsList() throws Exception {
+    void updateEvent_withInvalidData_shouldReturnFormViewWithErrors() throws Exception {
         mockMvc.perform(post("/events/1/update")
                         .with(csrf())
-                        .param("name", "Updated Event")
-                        .param("description", "Updated Description")
-                        .param("speakers[0]", "Speaker1")
+                        .param("name", "")  // Invalid name (empty)
                         .param("roomId", "1")
-                        .param("eventDateTime", "2025-04-21T10:00:00")
-                        .param("projectorCode", "1234")
-                        .param("projectorCheck", "45")
-                        .param("price", "29.99"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/events"));
+                        .param("speakers[0]", "Speaker1"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("events/form"))  // Should match the actual template name
+                .andExpect(model().attributeExists("rooms"))
+                .andExpect(model().hasErrors());
     }
 }

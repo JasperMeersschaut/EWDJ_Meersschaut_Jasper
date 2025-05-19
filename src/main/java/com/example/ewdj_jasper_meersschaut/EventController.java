@@ -141,7 +141,7 @@ public class EventController {
     ) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("rooms", roomService.findAll());
-            return "events/eventForm";
+            return "events/form";
         }
 
         event.setRoom(roomService.findById(roomId));
