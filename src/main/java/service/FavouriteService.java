@@ -23,7 +23,7 @@ public class FavouriteService {
     }
 
 
-    public List<Event> getSortedFavorites(User user) {
+    public List<Event> getSortedfavourites(User user) {
         if (user == null) {
             return Collections.emptyList();
         }

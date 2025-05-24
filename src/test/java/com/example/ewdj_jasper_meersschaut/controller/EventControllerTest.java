@@ -138,7 +138,7 @@ class EventControllerTest {
 
     @Test
     @WithAnonymousUser
-    void viewEvent_asAnonymous_shouldShowEventDetailsWithoutFavoriteInfo() throws Exception {
+    void viewEvent_asAnonymous_shouldShowEventDetailsWithoutFavouriteInfo() throws Exception {
         // Test viewing an event as anonymous user
         mockMvc.perform(get("/events/1"))
                 .andExpect(status().isOk())
@@ -151,7 +151,7 @@ class EventControllerTest {
 
     @Test
     @WithMockUser(username = "user1")
-    void viewEvent_asAuthenticatedUser_shouldShowEventDetailsWithFavoriteInfo() throws Exception {
+    void viewEvent_asAuthenticatedUser_shouldShowEventDetailsWithFavouriteInfo() throws Exception {
         // Test viewing an event as authenticated user
         mockMvc.perform(get("/events/1"))
                 .andExpect(status().isOk())

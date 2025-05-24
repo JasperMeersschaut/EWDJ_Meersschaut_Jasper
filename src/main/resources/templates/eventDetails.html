@@ -43,28 +43,28 @@
     </div>
 
     <div class="action-buttons">
-        <a th:href="@{/events}" class="back-button" th:text="#{event.favorite.back}">Back to events</a>
+        <a th:href="@{/events}" class="back-button" th:text="#{event.favourite.back}">Back to events</a>
 
         <div sec:authorize="hasRole('USER')">
-            <div class="favorite-actions">
+            <div class="favourite-actions">
                 <form th:if="${!isFavourite}" th:action="@{/favourites/{id}/add(id=${event.id})}" method="post"
-                      class="favorite-form">
+                      class="favourite-form">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                    <button type="submit" class="favorite-add" th:disabled="${maxFavouritesReached}"
-                            th:text="#{event.favorite.add}">Add to favorites
+                    <button type="submit" class="favourite-add" th:disabled="${maxFavouritesReached}"
+                            th:text="#{event.favourite.add}">Add to favourites
                     </button>
                     <span th:unless="${maxFavouritesReached}" class="form-hint"
-                          th:text="#{event.favorite.count(${favouriteCount}, 5)}">0/5 favorites used</span>
-                    <span th:if="${maxFavouritesReached}" class="form-error" th:text="#{event.favorite.max}">You've reached the maximum of 5 favorite events.</span>
+                          th:text="#{event.favourite.count(${favouriteCount}, 5)}">0/5 favourites used</span>
+                    <span th:if="${maxFavouritesReached}" class="form-error" th:text="#{event.favourite.max}">You've reached the maximum of 5 favourite events.</span>
                 </form>
                 <form th:if="${isFavourite}" th:action="@{/favourites/{id}/remove(id=${event.id})}" method="post"
-                      class="favorite-form">
+                      class="favourite-form">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                    <button type="submit" class="favorite-remove" th:text="#{event.favorite.remove}">Remove from
-                        favorites
+                    <button type="submit" class="favourite-remove" th:text="#{event.favourite.remove}">Remove from
+                        favourites
                     </button>
                     <span class="form-hint"
-                          th:text="#{event.favorite.count(${favouriteCount}, 5)}">0/5 favorites used</span>
+                          th:text="#{event.favourite.count(${favouriteCount}, 5)}">0/5 favourites used</span>
                 </form>
             </div>
         </div>

@@ -72,22 +72,22 @@ button, .back-button {
     transition: background 0.2s, transform 0.2s;
 }
 
-button.favorite-add {
+button.favourite-add {
     background: #2b8a84;
     color: #fff;
 }
 
-button.favorite-add:hover {
+button.favourite-add:hover {
     background: #246e69;
     transform: translateY(-2px);
 }
 
-button.favorite-remove {
+button.favourite-remove {
     background: #dc3545;
     color: #fff;
 }
 
-button.favorite-remove:hover {
+button.favourite-remove:hover {
     background: #c82333;
     transform: translateY(-2px);
 }

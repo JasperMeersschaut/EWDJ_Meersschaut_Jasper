@@ -17,7 +17,7 @@
     </div>
 
     <div th:if="${#lists.isEmpty(favourites)}" class="no-favourites-message">
-        <p th:text="#{account.noFavorites}">You have no favorite events.</p>
+        <p th:text="#{account.noFavourites}">You have no favourite events.</p>
     </div>
 
     <div th:unless="${#lists.isEmpty(favourites)}" class="events-grid">

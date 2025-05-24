@@ -26,10 +26,10 @@ public class FavouriteController {
     }
 
     @GetMapping
-    public String getUserFavorites(Model model, Authentication authentication) {
+    public String getUserFavourites(Model model, Authentication authentication) {
         String username = authentication.getName();
         User user = userService.findUserByUsername(username);
-        model.addAttribute("favourites", favouriteService.getSortedFavorites(user));
+        model.addAttribute("favourites", favouriteService.getSortedFavourites(user));
         return "events/favouritesList";
     }
 

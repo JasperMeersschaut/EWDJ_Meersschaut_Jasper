@@ -102,7 +102,7 @@ body {
     color: #2b8a84;
 }
 
-.favorites-link {
+.favourites-link {
     display: inline-block;
     margin-top: 30px;
     padding: 8px 16px;
@@ -114,7 +114,7 @@ body {
     transition: background-color 0.2s;
 }
 
-.favorites-link:hover {
+.favourites-link:hover {
     background: #e0e0e0;
 }
 

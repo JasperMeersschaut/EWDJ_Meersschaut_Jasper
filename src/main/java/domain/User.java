@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -43,7 +42,7 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "event_id")
     )
-    @Size(max = 5, message = "{user.favorites.max}")
+    @Size(max = 5, message = "{user.favourites.max}")
     private Set<Event> favourites = new HashSet<>();
 
     @ElementCollection(fetch = FetchType.EAGER)
