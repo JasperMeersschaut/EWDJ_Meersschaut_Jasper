@@ -9,7 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -58,14 +58,15 @@ class UniqueSpeakersValidatorTest {
     }
 
     @Test
-    void eventWithEmptySpeakers_shouldHaveNoViolations() {
+    void eventWithEmptySpeakers_shouldHaveSpeakersRequiredViolation() {
         Event event = new Event();
-        event.setSpeakers(Collections.emptyList());
+        event.setSpeakers(List.of("", " ", ""));
 
         Set<ConstraintViolation<Event>> violations = validator.validate(event);
+
         assertThat(violations)
-                .filteredOn(v -> v.getConstraintDescriptor().getAnnotation() instanceof UniqueSpeakersValid)
-                .isEmpty();
+                .anyMatch(v -> v.getPropertyPath().toString().equals("speakers")
+                        && v.getMessage().equals("{event.speakers.required}"));
     }
 
     @Test

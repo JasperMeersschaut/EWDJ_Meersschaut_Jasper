@@ -58,15 +58,23 @@ class UniqueEventValidatorTest {
     void eventWithRoomTimeConflict_shouldHaveViolations() {
         Event event = createEvent("Event1", LocalDateTime.now(), new Room());
 
+        // Simuleer dat er een tijdconflict is in dezelfde zaal
         Mockito.when(eventRepository.existsByRoomAndEventDateTime(Mockito.any(), Mockito.any())).thenReturn(true);
         Mockito.when(eventRepository.existsByNameAndEventDateTimeBetween(Mockito.anyString(), Mockito.any(), Mockito.any())).thenReturn(false);
 
         UniqueEventValidator validatorInstance = new UniqueEventValidator();
         ReflectionTestUtils.setField(validatorInstance, "eventRepository", eventRepository);
 
+        // Mock het volledige constraintvalidatorcontext chain
         ConstraintValidatorContext context = Mockito.mock(ConstraintValidatorContext.class);
-        Mockito.when(context.buildConstraintViolationWithTemplate(Mockito.anyString())).thenReturn(Mockito.mock(ConstraintValidatorContext.ConstraintViolationBuilder.class));
+        ConstraintValidatorContext.ConstraintViolationBuilder builder = Mockito.mock(ConstraintValidatorContext.ConstraintViolationBuilder.class);
+        ConstraintValidatorContext.ConstraintViolationBuilder.NodeBuilderCustomizableContext nodeBuilder = Mockito.mock(ConstraintValidatorContext.ConstraintViolationBuilder.NodeBuilderCustomizableContext.class);
 
+        Mockito.when(context.buildConstraintViolationWithTemplate(Mockito.anyString())).thenReturn(builder);
+        Mockito.when(builder.addPropertyNode(Mockito.anyString())).thenReturn(nodeBuilder);
+        Mockito.when(nodeBuilder.addConstraintViolation()).thenReturn(context);
+
+        // Verwacht dat de validator false teruggeeft omdat er een zaalconflict is
         assertThat(validatorInstance.isValid(event, context)).isFalse();
     }
 
@@ -81,7 +89,12 @@ class UniqueEventValidatorTest {
         ReflectionTestUtils.setField(validatorInstance, "eventRepository", eventRepository);
 
         ConstraintValidatorContext context = Mockito.mock(ConstraintValidatorContext.class);
-        Mockito.when(context.buildConstraintViolationWithTemplate(Mockito.anyString())).thenReturn(Mockito.mock(ConstraintValidatorContext.ConstraintViolationBuilder.class));
+        ConstraintValidatorContext.ConstraintViolationBuilder builder = Mockito.mock(ConstraintValidatorContext.ConstraintViolationBuilder.class);
+        ConstraintValidatorContext.ConstraintViolationBuilder.NodeBuilderCustomizableContext nodeBuilder = Mockito.mock(ConstraintValidatorContext.ConstraintViolationBuilder.NodeBuilderCustomizableContext.class);
+
+        Mockito.when(context.buildConstraintViolationWithTemplate(Mockito.anyString())).thenReturn(builder);
+        Mockito.when(builder.addPropertyNode(Mockito.anyString())).thenReturn(nodeBuilder);
+        Mockito.when(nodeBuilder.addConstraintViolation()).thenReturn(context);
 
         assertThat(validatorInstance.isValid(event, context)).isFalse();
     }
