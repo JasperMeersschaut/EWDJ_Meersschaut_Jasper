@@ -55,8 +55,8 @@
                     </button>
                     <span th:unless="${maxFavouritesReached}" class="form-hint"
                           th:text="#{event.favorite.count(${favouriteCount}, 5)}">0/5 favorites used</span>
+                    <span th:if="${maxFavouritesReached}" class="form-error" th:text="#{event.favorite.max}">You've reached the maximum of 5 favorite events.</span>
                 </form>
-
                 <form th:if="${isFavourite}" th:action="@{/favourites/{id}/remove(id=${event.id})}" method="post"
                       class="favorite-form">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
@@ -66,10 +66,6 @@
                     <span class="form-hint"
                           th:text="#{event.favorite.count(${favouriteCount}, 5)}">0/5 favorites used</span>
                 </form>
-
-                <p th:if="${maxFavouritesReached && !isFavourite}" class="form-error" th:text="#{event.favorite.max}">
-                    You've reached the maximum of 5 favorite events.
-                </p>
             </div>
         </div>
 
