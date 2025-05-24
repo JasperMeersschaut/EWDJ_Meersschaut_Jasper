@@ -26,8 +26,8 @@ public class EventService {
         this.eventRepository = eventRepository;
     }
 
-    public Object getAllEvents() {
-        return eventRepository.findAll();
+    public List<Event> getAllEvents() {
+        return eventRepository.findAllByOrderByEventDateTimeAsc();
     }
 
     public boolean existsByNameAndEventDateTimeBetween(String name, LocalDateTime start, LocalDateTime end) {
