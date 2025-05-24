@@ -1,4 +1,4 @@
-package validator;
+package com.example.ewdj_jasper_meersschaut.validator;
 
 import domain.Event;
 import jakarta.validation.ConstraintViolation;
@@ -7,6 +7,8 @@ import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import validator.UniqueSpeakersValid;
+import validator.UniqueSpeakersValidator;
 
 import java.util.Arrays;
 import java.util.List;
