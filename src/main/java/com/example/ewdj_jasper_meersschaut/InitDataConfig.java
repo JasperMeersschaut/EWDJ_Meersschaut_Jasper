@@ -41,18 +41,18 @@ public class InitDataConfig implements CommandLineRunner {
                 room1,
                 LocalDateTime.of(2025, 6, 15, 9, 0),
                 2345,
-                2345 % 97,  // Correct value: 81
+                2345 % 97,
                 59
         );
 
         Event event2 = new Event(
                 "Cybersecurity Summit",
                 "Exploring the latest trends in cybersecurity",
-                List.of("Charlie Green", "Diana Black"),
+                List.of("Charlie Green", "Diana Black", "Kanye West"),
                 room2,
-                LocalDateTime.of(2025, 6, 10, 14, 0),  // Changed to June
+                LocalDateTime.of(2025, 6, 10, 14, 0),
                 3456,
-                3456 % 97,  // Correct value: 87
+                3456 % 97,
                 79
         );
 
@@ -61,9 +61,9 @@ public class InitDataConfig implements CommandLineRunner {
                 "Learn about advancements in cloud technologies",
                 List.of("Eve Blue", "Frank Yellow"),
                 room3,
-                LocalDateTime.of(2025, 6, 20, 11, 0),  // Changed to June
+                LocalDateTime.of(2025, 6, 20, 11, 0),
                 4567,
-                4567 % 97,  // Correct value: 4
+                4567 % 97,
                 99
         );
 
@@ -72,9 +72,9 @@ public class InitDataConfig implements CommandLineRunner {
                 "Master modern web development techniques",
                 List.of("Grace Red", "Hank Purple"),
                 room4,
-                LocalDateTime.of(2025, 6, 25, 16, 0),  // Changed to June
+                LocalDateTime.of(2025, 6, 25, 16, 0),
                 5678,
-                5678 % 97,  // Correct value: 21
+                5678 % 97,
                 49
         );
 

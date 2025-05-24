@@ -63,6 +63,7 @@ body {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;
     transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
 }
 
 .event-card:hover {
@@ -118,7 +119,10 @@ body {
 }
 
 .event-actions {
-    margin-top: 10px;
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    margin-top: 0;
     display: flex;
     gap: 8px;
 }
