@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import service.UserService;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -19,6 +20,9 @@ class FavouriteControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private UserService userService;
 
     @Test
     @WithMockUser(username = "nameUser", roles = {"USER"})
@@ -101,5 +105,21 @@ class FavouriteControllerTest {
     void removeFavourite_withoutCsrf_shouldBeForbidden() throws Exception {
         mockMvc.perform(post("/favourites/1/remove"))
                 .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(username = "nameUser", roles = {"USER"})
+    void addFavourite_withInvalidEventId_shouldHandleGracefully() throws Exception {
+        mockMvc.perform(post("/favourites/999/add")
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection());
+    }
+
+    @Test
+    @WithMockUser(username = "nameUser", roles = {"USER"})
+    void removeFavourite_withInvalidEventId_shouldHandleGracefully() throws Exception {
+        mockMvc.perform(post("/favourites/999/remove")
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection());
     }
 }
