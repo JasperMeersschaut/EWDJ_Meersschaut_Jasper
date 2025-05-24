@@ -33,7 +33,6 @@ class EventControllerTest {
     @Test
     @WithAnonymousUser
     void viewEvent_whenEventNotFound_shouldHandleError() throws Exception {
-        // Note: This test will depend on how your controller handles not found cases
         mockMvc.perform(get("/events/999"))
                 .andExpect(view().name("redirect:/404"));
     }
@@ -118,5 +117,65 @@ class EventControllerTest {
                 .andExpect(view().name("events/form"))
                 .andExpect(model().attributeExists("rooms"))
                 .andExpect(model().hasErrors());
+    }
+
+    @Test
+    @WithMockUser(roles = {"ADMIN"})
+    void updateEvent_withValidData_shouldRedirectToEvents() throws Exception {
+        mockMvc.perform(post("/events/1/update")
+                        .with(csrf())
+                        .param("name", "Updated Event")
+                        .param("description", "Updated Description")
+                        .param("speakers[0]", "Speaker1")
+                        .param("speakers[1]", "Speaker2")
+                        .param("roomId", "1")
+                        .param("eventDateTime", "2025-06-21T10:00:00")
+                        .param("projectorCode", "1234")
+                        .param("projectorCheck", "70")
+                        .param("price", "19.99"))
+                .andExpect(redirectedUrl("/events"));
+    }
+
+    @Test
+    @WithAnonymousUser
+    void viewEvent_asAnonymous_shouldShowEventDetailsWithoutFavoriteInfo() throws Exception {
+        // Test viewing an event as anonymous user
+        mockMvc.perform(get("/events/1"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("eventDetails"))
+                .andExpect(model().attributeExists("event"))
+                .andExpect(model().attribute("isFavourite", false))
+                .andExpect(model().attribute("favouriteCount", 0))
+                .andExpect(model().attribute("maxFavouritesReached", false));
+    }
+
+    @Test
+    @WithMockUser(username = "user1")
+    void viewEvent_asAuthenticatedUser_shouldShowEventDetailsWithFavoriteInfo() throws Exception {
+        // Test viewing an event as authenticated user
+        mockMvc.perform(get("/events/1"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("eventDetails"))
+                .andExpect(model().attributeExists("event"))
+                .andExpect(model().attributeExists("isFavourite"))
+                .andExpect(model().attributeExists("favouriteCount"))
+                .andExpect(model().attributeExists("maxFavouritesReached"));
+    }
+
+
+    @Test
+    void viewEvent_withValidId_shouldReturnEventDetails() throws Exception {
+        mockMvc.perform(get("/events/1"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("eventDetails"))
+                .andExpect(model().attributeExists("event"));
+    }
+
+    @Test
+    @WithAnonymousUser
+    void updateEvent_asAnonymous_shouldRedirectToLogin() throws Exception {
+        mockMvc.perform(post("/events/1/update").with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("**/login"));
     }
 }
