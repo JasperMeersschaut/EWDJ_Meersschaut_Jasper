@@ -30,7 +30,8 @@
             <p><strong th:text="#{events.room}">Room:</strong> <span class="room"
                                                                      th:text="${event.room.name}">Room Name</span></p>
             <p><strong th:text="#{events.dateTime}">Date & Time:</strong>
-                <span th:text="${#temporals.format(event.eventDateTime, 'yyyy-MM-dd - HH:mm')}">Event Date</span>
+                <span th:with="df=#{datetime.format.pattern}"
+                      th:text="${#temporals.format(event.eventDateTime, df)}">Event Date</span>
             </p>
             <p><strong>Price:</strong> <span th:text="${#numbers.formatDecimal(event.price, 1, 2) + ' €'}">Price</span>
             </p>
