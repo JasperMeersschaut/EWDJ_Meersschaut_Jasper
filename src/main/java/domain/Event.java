@@ -3,6 +3,7 @@ package domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 import validator.ProjectorCheckValid;
 import validator.UniqueSpeakersValid;
 
@@ -41,6 +42,7 @@ public class Event implements Serializable {
 
     @Future(message = "{event.date.future}")
     @NotNull(message = "{event.date.required}")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime eventDateTime;
 
     @NotNull(message = "{event.projectorCode.required}")
