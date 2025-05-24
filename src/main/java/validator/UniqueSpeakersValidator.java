@@ -10,10 +10,6 @@ import java.util.Set;
 
 public class UniqueSpeakersValidator implements ConstraintValidator<UniqueSpeakersValid, Event> {
 
-    @Override
-    public void initialize(UniqueSpeakersValid constraintAnnotation) {
-        // No initialization needed
-    }
 
     @Override
     public boolean isValid(Event event, ConstraintValidatorContext context) {
@@ -22,11 +18,25 @@ public class UniqueSpeakersValidator implements ConstraintValidator<UniqueSpeake
         }
 
         List<String> speakers = event.getSpeakers();
-        Set<String> uniqueSpeakers = new HashSet<>(speakers);
+        Set<String> uniqueSpeakers = new HashSet<>();
+        boolean hasNonEmpty = false;
 
-        if (uniqueSpeakers.size() < speakers.size()) {
+        for (String speaker : speakers) {
+            if (speaker != null && !speaker.trim().isEmpty()) {
+                hasNonEmpty = true;
+                if (!uniqueSpeakers.add(speaker.trim())) {
+                    context.disableDefaultConstraintViolation();
+                    context.buildConstraintViolationWithTemplate("{event.speakers.unique}")
+                            .addPropertyNode("speakers")
+                            .addConstraintViolation();
+                    return false;
+                }
+            }
+        }
+
+        if (!hasNonEmpty) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("{event.speakers.unique}")
+            context.buildConstraintViolationWithTemplate("{event.speakers.required}")
                     .addPropertyNode("speakers")
                     .addConstraintViolation();
             return false;

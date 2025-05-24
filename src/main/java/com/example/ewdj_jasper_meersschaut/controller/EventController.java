@@ -18,6 +18,7 @@ import service.RoomService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/events")
@@ -86,7 +87,10 @@ public class EventController {
     public String addEvent(@ModelAttribute @Valid Event event, BindingResult result, @RequestParam("roomId") Long roomId, Model model, RedirectAttributes redirectAttributes) {
         Room room = roomService.findById(roomId);
         event.setRoom(room);
-
+        event.setSpeakers(event.getSpeakers()
+                .stream()
+                .filter(s -> s != null && !s.trim().isEmpty())
+                .collect(Collectors.toList()));
         if (eventService.existsByRoomAndEventDateTime(event.getRoom(), event.getEventDateTime())) {
             result.rejectValue("eventDateTime", "event.room.time.conflict", "Another event is already scheduled in this room at the same time");
         }
