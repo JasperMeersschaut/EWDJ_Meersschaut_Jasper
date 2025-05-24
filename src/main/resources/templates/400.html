@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title th:text="#{error.500.title}">Server Error</title>
+    <title th:text="#{error.400.title}">400 - Bad Request</title>
     <link rel="stylesheet" type="text/css" href="/css/header.css">
     <link rel="stylesheet" type="text/css" href="/css/error.css">
 </head>
@@ -10,11 +10,11 @@
 
 <div class="error-container">
     <div class="error-card">
-        <div class="error-code">500</div>
-        <h1 class="error-title" th:text="#{error.500.title}">Server Error</h1>
-        <p class="error-message" th:text="#{error.500.message}">
-            Something went wrong on our end.
-            We're working to fix the problem. Please try again later.
+        <div class="error-code">400</div>
+        <h1 class="error-title" th:text="#{error.400.title}">Bad Request</h1>
+        <p class="error-message" th:text="#{error.400.message}">
+            The server could not understand your request.
+            Please check your input and try again.
         </p>
         <a href="/events" class="home-button" th:text="#{button.back.events}">Go to Events</a>
     </div>
