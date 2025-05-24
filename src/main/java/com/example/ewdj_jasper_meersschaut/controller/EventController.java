@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import repository.UserRepository;
 import service.EventService;
-import service.FavouriteService;
 import service.RoomService;
 
 import java.time.LocalDate;
@@ -39,13 +38,14 @@ public class EventController {
         return "events/eventsList";
     }
 
-
-    @Autowired
-    private FavouriteService favouriteService;
-
-
     @Autowired
     private UserRepository userRepository;
+
+    /**
+     * Toont de details van een specifieke event.
+     * Indien de gebruiker is ingelogd, worden ook de favoriete status en het aantal favorieten getoond.
+     * Indien de gebruiker meer dan 5 favorieten heeft, wordt dit ook meegegeven.
+     */
 
     @GetMapping("/{id}")
     public String viewEvent(@PathVariable Long id, Model model, Authentication authentication) {
@@ -56,6 +56,7 @@ public class EventController {
             boolean isFavourite = false;
             int favouriteCount = 0;
             boolean maxFavouritesReached = false;
+
             if (authentication != null && authentication.isAuthenticated()) {
                 String username = authentication.getName();
                 User user = userRepository.findUserByUsername(username).orElse(null);
@@ -71,7 +72,6 @@ public class EventController {
 
             return "eventDetails";
         } catch (Exception e) {
-            model.addAttribute("error", "Error loading event details: " + e.getMessage());
             return "redirect:/404";
         }
     }
@@ -83,6 +83,12 @@ public class EventController {
         return "events/form";
     }
 
+    /**
+     * Voegt een nieuwe event toe.
+     * Controleert of de event al bestaat in de database en of er geen tijdsconflicten zijn met andere events in dezelfde zaal.
+     * Indien er fouten zijn, worden deze weergegeven op het formulier.
+     * Bij succes wordt de gebruiker doorgestuurd naar de lijst van events met een succesbericht.
+     */
     @PostMapping("/create")
     public String addEvent(@ModelAttribute @Valid Event event, BindingResult result, @RequestParam("roomId") Long roomId, Model model, RedirectAttributes redirectAttributes) {
         Room room = roomService.findById(roomId);
@@ -115,7 +121,6 @@ public class EventController {
             redirectAttributes.addFlashAttribute("successMessage", "Event " + event.getName() + " has been successfully created");
             return "redirect:/events";
         } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
             model.addAttribute("rooms", roomService.findAll());
             return "events/form";
         }
@@ -129,21 +134,18 @@ public class EventController {
             model.addAttribute("rooms", roomService.findAll());
             return "events/form";
         } catch (Exception e) {
-            model.addAttribute("error", "Error loading event details: " + e.getMessage());
             return "redirect:/404";
         }
-
     }
 
+    /**
+     * Verwerkt de update van een bestaande event.
+     * Controleert of de event al bestaat in de database en of er geen tijdsconflicten zijn met andere events in dezelfde zaal.
+     * Indien er fouten zijn, worden deze weergegeven op het formulier.
+     * Bij succes wordt de gebruiker doorgestuurd naar de lijst van events met een succesbericht.
+     */
     @PostMapping("/{id}/update")
-    public String updateEvent(
-            @PathVariable Long id,
-            @Valid @ModelAttribute("event") Event event,
-            BindingResult bindingResult,
-            @RequestParam("roomId") Long roomId,
-            Model model,
-            RedirectAttributes redirectAttributes
-    ) {
+    public String updateEvent(@PathVariable Long id, @Valid @ModelAttribute("event") Event event, BindingResult bindingResult, @RequestParam("roomId") Long roomId, Model model, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("rooms", roomService.findAll());
             return "events/form";
@@ -162,6 +164,4 @@ public class EventController {
             return "events/form";
         }
     }
-
-
 }

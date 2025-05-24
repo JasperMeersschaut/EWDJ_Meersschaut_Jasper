@@ -43,8 +43,7 @@ public class FavouriteController {
                 user.getFavourites().add(event);
                 userService.save(user);
             } else {
-                // Handle the case where the user has reached the maximum number of favorites
-                // You can redirect to an error page or show a message
+                //Knop uitgeschakeld indien max 5 favorieten, dus geen else nodig
             }
         }
         return "redirect:/events/" + id;

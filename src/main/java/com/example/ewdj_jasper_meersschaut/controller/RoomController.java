@@ -29,13 +29,12 @@ public class RoomController {
     }
 
     @PostMapping("/create")
-    public String addRoom(@ModelAttribute @Valid Room room, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
+    public String addRoom(@ModelAttribute @Valid Room room, BindingResult result, RedirectAttributes redirectAttributes) {
         if (roomService.existsByName(room.getName())) {
             result.rejectValue("name", "room.name.duplicate", "A room with this name already exists");
         }
 
         if (result.hasErrors()) {
-            model.addAttribute("errorMessage", "Please correct the errors in the form");
             return "rooms/form";
         }
 
@@ -44,7 +43,6 @@ public class RoomController {
             redirectAttributes.addFlashAttribute("successMessage", "Room " + room.getName() + " with capacity " + room.getCapacity() + " has been successfully created");
             return "redirect:/events";
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "Error saving room: " + e.getMessage());
             return "rooms/form";
         }
     }
