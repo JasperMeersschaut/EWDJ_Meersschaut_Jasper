@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -47,10 +48,13 @@ public class RoomControllerTest {
     @Test
     @WithMockUser(roles = {"ADMIN"})
     void addRoom_withValidData_shouldRedirectToEvents() throws Exception {
+        String uniqueName = "Z" + String.format("%03d", (int) (Math.random() * 900) + 100);
+
         mockMvc.perform(post("/rooms/create")
                         .with(csrf())
-                        .param("name", "A123")
+                        .param("name", uniqueName)
                         .param("capacity", "25"))
+                .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/events"));
     }
@@ -113,5 +117,24 @@ public class RoomControllerTest {
                         .param("name", "Test Room")
                         .param("capacity", "25"))
                 .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = {"ADMIN"})
+    void addRoom_withDuplicateName_shouldReturnFormWithErrors() throws Exception {
+        mockMvc.perform(post("/rooms/create")
+                        .with(csrf())
+                        .param("name", "A123")
+                        .param("capacity", "25"))
+                .andExpect(status().is3xxRedirection());
+
+        mockMvc.perform(post("/rooms/create")
+                        .with(csrf())
+                        .param("name", "A123")
+                        .param("capacity", "30"))
+                .andExpect(status().isOk()) // This should return the form
+                .andExpect(view().name("rooms/form"))
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeHasFieldErrors("room", "name"));
     }
 }
