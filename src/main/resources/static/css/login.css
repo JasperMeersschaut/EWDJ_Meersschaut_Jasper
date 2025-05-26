@@ -131,3 +131,7 @@ body {
     border-radius: 3px;
     border-left: 3px solid #2b8a84;
 }
+
+.credential-item {
+    cursor: pointer;
+}
