@@ -18,6 +18,8 @@ import java.util.Set;
 @ToString(exclude = {"id", "favourites", "roles"})
 public class User {
 
+    public final static int MAX_FAVOURITES = 5;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.NONE)
@@ -42,7 +44,7 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "event_id")
     )
-    @Size(max = 5, message = "{user.favourites.max}")
+    @Size(max = MAX_FAVOURITES, message = "{user.favourites.max}")
     private Set<Event> favourites = new HashSet<>();
 
     @ElementCollection(fetch = FetchType.EAGER)

@@ -39,7 +39,7 @@ public class FavouriteController {
         User user = userService.findUserByUsername(auth.getName());
         Event event = favouriteService.findEventById(id);
         if (user != null && event != null) {
-            if (user.getFavourites().size() < 5) {
+            if (user.getFavourites().size() < User.MAX_FAVOURITES) {
                 user.getFavourites().add(event);
                 userService.save(user);
             } else {
